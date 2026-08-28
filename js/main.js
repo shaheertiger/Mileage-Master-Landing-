@@ -82,8 +82,8 @@ const init = async () => {
   // ── 11. Finale sequence setup ─────────────────────────────
   await initFinaleScene();
 
-  // ── 11.5 Live Design Tweakner ─────────────────────────────
-  initTweakner();
+  // ── 11.5 Live Design Tweakner (hidden — re-enable when needed) ──
+  // initTweakner();
 
   // ── 12. Start Experience ──────────────────────────────────
   // Trigger hero animation immediately since loader is removed
