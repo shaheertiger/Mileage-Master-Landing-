@@ -22,7 +22,6 @@ export const initHero = async () => {
   const bottleGroup  = hero.querySelector('.bottle-group');
   const bottleCap    = hero.querySelector('.bottle-cap');
   const scrollHint   = hero.querySelector('.hero__scroll-hint');
-  const narrative1   = hero.querySelector('#narrative-1');
   const narrative2   = hero.querySelector('#narrative-2');
   const narrative3   = hero.querySelector('#narrative-3');
   const landingTitle = hero.querySelector('#landing-title');
@@ -77,14 +76,6 @@ export const initHero = async () => {
       0
     );
   }
-
-  // Phase 1 Text: PRECISION ENGINEERING
-  masterTl.fromTo(narrative1, 
-    { opacity: 0, x: -50 }, 
-    { opacity: 1, x: 0, duration: 0.05, ease: 'power2.out' }, 
-    0.15
-  );
-  masterTl.to(narrative1, { opacity: 0, duration: 0.05 }, 0.45);
 
   // Phase 2 Text: SYNTHETIC PROTECTION
   masterTl.fromTo(narrative2, 

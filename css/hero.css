@@ -58,7 +58,7 @@
 /* Animates in on load, fades out when oil sequence begins */
 .hero__landing-title {
   position: absolute;
-  bottom: 10vh;
+  bottom: 4vh;
   left: 5vw;
   z-index: 10;
   pointer-events: none;
