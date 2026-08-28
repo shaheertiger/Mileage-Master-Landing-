@@ -6,7 +6,6 @@
 import { initGSAP }                       from './utils/gsap-init.js';
 import { TIER }                           from './utils/device.js';
 import { emit, EVENTS }                   from './utils/events.js';
-import { initNav }                        from './nav.js';
 import { initHero }                       from './hero.js';
 import { initEngineScene }                from './engine.js';
 import { initFrictionScene }              from './friction.js';
@@ -49,7 +48,7 @@ const init = async () => {
   }
 
   // ── 2. Navigation ─────────────────────────────────────────
-  initNav();
+  // initNav();
 
   // ── 3. Hero scene setup ───────────────────────────────────
   // Runs setup, waits for LOADER_COMPLETE to animate entrance
