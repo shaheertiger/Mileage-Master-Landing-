@@ -33,13 +33,16 @@
 }
 
 #hero-sequence-canvas {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 1;
+  /* GPU layer — compositor handles updates without main thread */
+  will-change: contents;
+  transform: translateZ(0);
+  /* Sharp pixel rendering on high-DPI screens */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 /* Dark vignette overlay for cinematic contrast */

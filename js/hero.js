@@ -42,7 +42,7 @@ export const initHero = async () => {
       pin: sticky,
       start: 'top top',
       end: 'bottom bottom',
-      scrub: 1.2,
+      scrub: true, // instant 1:1 scroll mapping, zero lag
       onUpdate(self) {
         const p = self.progress;
         emit(EVENTS.HERO_SCROLL_PROGRESS, { progress: p });
