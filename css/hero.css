@@ -54,6 +54,56 @@
   pointer-events: none;
 }
 
+/* ── LANDING TITLE ────────────────────────────────────────── */
+/* Animates in on load, fades out when oil sequence begins */
+.hero__landing-title {
+  position: absolute;
+  bottom: 10vh;
+  left: 5vw;
+  z-index: 10;
+  pointer-events: none;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.hero__landing-brand {
+  display: flex;
+  gap: 0.4em;
+  margin-bottom: 0.15em;
+}
+
+.hero__landing-tagline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em;
+}
+
+.hero__landing-title .lw {
+  display: inline-block;
+  font-family: 'Bebas Neue', 'Oswald', sans-serif;
+  font-size: clamp(2.8rem, 7vw, 9rem);
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+}
+
+.hero__landing-brand .lw {
+  font-size: clamp(3.5rem, 9vw, 12rem);
+}
+
+.hero__landing-title .lw.red {
+  color: var(--brand-red, #C41230);
+}
+
+@media (max-width: 768px) {
+  .hero__landing-title { bottom: 8vh; left: 4vw; }
+  .hero__landing-title .lw { font-size: clamp(2rem, 10vw, 5rem); }
+  .hero__landing-brand .lw { font-size: clamp(2.5rem, 12vw, 6rem); }
+}
+
 /* ── WEBGL & PARTICLES ────────────────────────────────────── */
 #hero-canvas {
   position: absolute;

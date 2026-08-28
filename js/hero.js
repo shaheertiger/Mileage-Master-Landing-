@@ -25,6 +25,7 @@ export const initHero = async () => {
   const narrative1   = hero.querySelector('#narrative-1');
   const narrative2   = hero.querySelector('#narrative-2');
   const narrative3   = hero.querySelector('#narrative-3');
+  const landingTitle = hero.querySelector('#landing-title');
 
   // Telemetry references
   const hudStatus = document.getElementById('hud-status');
@@ -100,6 +101,12 @@ export const initHero = async () => {
     0.75
   );
 
+  // Landing title — fades out when oil sequence begins (~53% progress)
+  // Hood = 250 frames (0-0.526), Oil starts at frame 251
+  if (landingTitle) {
+    masterTl.to(landingTitle, { opacity: 0, y: -30, duration: 0.04, ease: 'power2.in' }, 0.50);
+  }
+
   // Master sequence scrubber (0 - 1.0)
   masterTl.to(playhead, {
     frame: seq.totalFrames - 1,
@@ -109,7 +116,10 @@ export const initHero = async () => {
   }, 0);
 
   // ── Arrival animation (runs after loader completes) ──────
-  on(EVENTS.LOADER_COMPLETE, () => playArrival(hero, gsap));
+  on(EVENTS.LOADER_COMPLETE, () => {
+    playArrival(hero, gsap);
+    playLandingTitle(landingTitle, gsap);
+  });
 };
 
 /* ── HUD Telemetry Logic ──────────────────────────────────── */
@@ -194,4 +204,20 @@ const playArrival = (hero, gsap) => {
       1.0
     );
   }
+};
+
+/* ── Landing title entrance animation ─────────────────────── */
+const playLandingTitle = (container, gsap) => {
+  if (!container) return;
+  const words = container.querySelectorAll('.lw');
+  if (!words.length) return;
+
+  gsap.to(words, {
+    opacity: 1,
+    y: 0,
+    duration: 0.9,
+    stagger: 0.07,
+    ease: 'expo.out',
+    delay: 0.3,
+  });
 };
