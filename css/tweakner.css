@@ -5,6 +5,7 @@
 
 /* ── UI Panel ────────────────────────────────────────────── */
 #tweakner-panel {
+  display: none; /* Hidden — re-enable when needed */
   position: fixed;
   top: 2rem;
   right: 2rem;
