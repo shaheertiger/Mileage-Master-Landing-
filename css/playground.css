@@ -1,0 +1,271 @@
+/* ============================================================
+   PLAYGROUND UI STYLES
+   ============================================================ */
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Hide scrollbars in playground */
+  background: #050505;
+  color: #fff;
+  font-family: var(--font-body), sans-serif;
+}
+
+/* ── Controls Panel ──────────────────────────────────────── */
+.pg-controls {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  width: 320px;
+  background: rgba(15, 15, 15, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pg-controls__header h2 {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.pg-controls__header p {
+  font-size: 0.75rem;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pg-controls__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pg-controls__group label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+select {
+  width: 100%;
+  padding: 0.75rem;
+  background: #000;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  outline: none;
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.pg-theme-toggles {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pg-theme-toggles button {
+  flex: 1;
+  padding: 0.5rem;
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.pg-theme-toggles button.active {
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+  font-weight: bold;
+}
+
+/* ── Preview Area ────────────────────────────────────────── */
+.pg-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* subtle grid background */
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+.pg-text-container {
+  width: 90vw;
+  max-width: 1600px;
+  position: relative;
+  transition: all 0.5s ease;
+}
+
+.pg-brand, .pg-tagline {
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.word { display: inline-block; white-space: nowrap; }
+
+/* ── Color Themes ────────────────────────────────────────── */
+
+/* Red-White Theme */
+.red-white .w1 { color: var(--brand-red, #C41230); }
+.red-white .w2 { color: #fff; }
+.red-white .w3 { color: #fff; }
+.red-white .w4 { color: var(--brand-red, #C41230); }
+.red-white .w5 { color: #fff; }
+.red-white .w6 { color: #fff; }
+
+/* All White Theme */
+.all-white .word { color: #fff; -webkit-text-stroke: 0; }
+
+/* All Red Theme */
+.all-red .word { color: var(--brand-red, #C41230); -webkit-text-stroke: 0; }
+
+
+/* ============================================================
+   10 LAYOUT STYLES
+   ============================================================ */
+
+/* STYLE 1: Cinematic Wide 
+   Horizontal continuous flowing text */
+.style-1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.style-1 .pg-brand { font-size: 6vw; display: flex; gap: 2vw; }
+.style-1 .pg-tagline { font-size: 8vw; display: flex; gap: 2vw; margin-top: -1vw; }
+
+/* STYLE 2: The Grid Split 
+   Brand left, Tagline bottom right */
+.style-2 {
+  height: 60vh;
+  position: relative;
+}
+.style-2 .pg-brand { 
+  position: absolute; top: 0; left: 0; 
+  font-size: 8vw; display: flex; flex-direction: column; 
+}
+.style-2 .pg-tagline { 
+  position: absolute; bottom: 0; right: 0; 
+  font-size: 6vw; text-align: right; display: flex; flex-direction: column; 
+}
+
+/* STYLE 3: Staggered Step 
+   Each word pushed further right */
+.style-3 {
+  display: flex;
+  flex-direction: column;
+  font-size: 7vw;
+}
+.style-3 .pg-brand { display: flex; flex-direction: column; }
+.style-3 .pg-tagline { display: flex; flex-direction: column; }
+.style-3 .w1 { margin-left: 0; }
+.style-3 .w2 { margin-left: 10vw; }
+.style-3 .w3 { margin-left: 20vw; }
+.style-3 .w4 { margin-left: 30vw; }
+.style-3 .w5 { margin-left: 40vw; }
+.style-3 .w6 { margin-left: 50vw; }
+
+/* STYLE 4: Brutalist Block 
+   Forced into a block */
+.style-4 {
+  display: flex;
+  flex-direction: column;
+}
+.style-4 .pg-brand { display: flex; justify-content: space-between; font-size: 11vw; }
+.style-4 .pg-tagline { display: flex; justify-content: space-between; font-size: 6.8vw; margin-top: -1vw;}
+
+/* STYLE 5: The Overlap Outline 
+   Tagline overlaps brand as outline */
+.style-5 {
+  position: relative;
+  height: 50vh;
+}
+.style-5 .pg-brand {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  font-size: 14vw; opacity: 0.1;
+  color: transparent !important;
+  -webkit-text-stroke: 2px rgba(255,255,255,0.5);
+  display: flex; gap: 2vw;
+}
+.style-5 .pg-tagline {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 8vw; display: flex; flex-direction: column; text-align: center;
+}
+
+/* STYLE 6: Horizontal Interlock 
+   Words weave into each other */
+.style-6 {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 1vw;
+  font-size: 8vw;
+}
+.style-6 .w2 { margin-right: 5vw; }
+
+/* STYLE 7: Symmetrical Stack 
+   Perfectly centered vertical */
+.style-7 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-size: 10vw;
+}
+.style-7 .pg-brand { display: flex; flex-direction: column; }
+.style-7 .pg-tagline { display: flex; flex-direction: column; }
+
+/* STYLE 8: Floating Typographic Mesh 
+   Words scattered organically */
+.style-8 {
+  position: relative;
+  height: 80vh;
+}
+.style-8 .word { position: absolute; font-size: 8vw; }
+.style-8 .w1 { top: 10%; left: 10%; }
+.style-8 .w2 { top: 20%; right: 15%; font-size: 10vw;}
+.style-8 .w3 { top: 50%; left: 5%; }
+.style-8 .w4 { top: 45%; left: 35%; font-size: 12vw;}
+.style-8 .w5 { top: 75%; left: 20%; }
+.style-8 .w6 { top: 70%; right: 10%; font-size: 14vw;}
+
+/* STYLE 9: Diagonal Shift 
+   Angled composition */
+.style-9 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: rotate(-5deg);
+  font-size: 8vw;
+}
+.style-9 .pg-brand { display: flex; gap: 2vw; }
+.style-9 .pg-tagline { display: flex; gap: 1vw; }
+
+/* STYLE 10: Compressed Cinematic
+   Super tight kerning and wide tracking */
+.style-10 {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  letter-spacing: 0.2em;
+}
+.style-10 .pg-brand { font-size: 4vw; display: flex; justify-content: center; gap: 4vw; margin-bottom: 2vw;}
+.style-10 .pg-tagline { font-size: 7vw; display: flex; justify-content: center; gap: 3vw;}
