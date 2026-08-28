@@ -133,9 +133,11 @@ select {
 .red-white .w1 { color: var(--brand-red, #C41230); }
 .red-white .w2 { color: #fff; }
 .red-white .w3 { color: #fff; }
-.red-white .w4 { color: var(--brand-red, #C41230); }
-.red-white .w5 { color: #fff; }
+.red-white .w4 { color: #fff; }
+.red-white .w5 { color: var(--brand-red, #C41230); }
 .red-white .w6 { color: #fff; }
+.red-white .w7 { color: #fff; }
+.red-white .w8 { color: var(--brand-red, #C41230); }
 
 /* All White Theme */
 .all-white .word { color: #fff; -webkit-text-stroke: 0; }
@@ -184,11 +186,13 @@ select {
 .style-3 .pg-brand { display: flex; flex-direction: column; }
 .style-3 .pg-tagline { display: flex; flex-direction: column; }
 .style-3 .w1 { margin-left: 0; }
-.style-3 .w2 { margin-left: 10vw; }
-.style-3 .w3 { margin-left: 20vw; }
-.style-3 .w4 { margin-left: 30vw; }
-.style-3 .w5 { margin-left: 40vw; }
-.style-3 .w6 { margin-left: 50vw; }
+.style-3 .w2 { margin-left: 5vw; }
+.style-3 .w3 { margin-left: 10vw; }
+.style-3 .w4 { margin-left: 15vw; }
+.style-3 .w5 { margin-left: 20vw; }
+.style-3 .w6 { margin-left: 25vw; }
+.style-3 .w7 { margin-left: 30vw; }
+.style-3 .w8 { margin-left: 35vw; }
 
 /* STYLE 4: Brutalist Block 
    Forced into a block */
@@ -251,10 +255,12 @@ select {
 .style-8 .word { position: absolute; font-size: 8vw; }
 .style-8 .w1 { top: 10%; left: 10%; }
 .style-8 .w2 { top: 20%; right: 15%; font-size: 10vw;}
-.style-8 .w3 { top: 50%; left: 5%; }
-.style-8 .w4 { top: 45%; left: 35%; font-size: 12vw;}
-.style-8 .w5 { top: 75%; left: 20%; }
-.style-8 .w6 { top: 70%; right: 10%; font-size: 14vw;}
+.style-8 .w3 { top: 35%; left: 15%; }
+.style-8 .w4 { top: 40%; right: 25%; font-size: 8vw;}
+.style-8 .w5 { top: 55%; left: 5%; font-size: 10vw;}
+.style-8 .w6 { top: 60%; right: 35%; }
+.style-8 .w7 { top: 75%; left: 20%; }
+.style-8 .w8 { top: 70%; right: 10%; font-size: 14vw;}
 
 /* STYLE 9: Diagonal Shift 
    Angled composition */
