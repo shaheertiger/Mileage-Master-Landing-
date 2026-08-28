@@ -22,7 +22,6 @@ export const initHero = async () => {
   const bottleGroup  = hero.querySelector('.bottle-group');
   const bottleCap    = hero.querySelector('.bottle-cap');
   const scrollHint   = hero.querySelector('.hero__scroll-hint');
-  const titleWrap    = hero.querySelector('.hero__title-wrap');
   const narrative1   = hero.querySelector('#narrative-1');
   const narrative2   = hero.querySelector('#narrative-2');
   const narrative3   = hero.querySelector('#narrative-3');
@@ -67,20 +66,9 @@ export const initHero = async () => {
 
   const playhead = { frame: 0 };
 
-  // Intro Sequence (0-0.05): Slide title left, fade in BG and Nav
+  // Intro Sequence (0-0.05): Fade in Nav
   const navElements = document.querySelectorAll('#nav .nav__links, #nav .nav-right');
-  const heroBg = hero.querySelector('.hero__bg');
-
-  masterTl.fromTo(titleWrap, 
-    { x: '50vw', xPercent: -50, yPercent: -50 }, 
-    { x: '4vw', xPercent: 0, yPercent: -50, duration: 0.05, ease: 'power2.out' }, 
-    0
-  );
-  masterTl.fromTo(heroBg, 
-    { opacity: 0 }, 
-    { opacity: 1, duration: 0.05, ease: 'power1.inOut' }, 
-    0
-  );
+  
   if (navElements.length) {
     masterTl.fromTo(navElements, 
       { opacity: 0 }, 
@@ -88,9 +76,6 @@ export const initHero = async () => {
       0
     );
   }
-
-  // Fade out main title early
-  masterTl.to(titleWrap, { opacity: 0, scale: 0.95, duration: 0.05 }, 0.1);
 
   // Phase 1 Text: PRECISION ENGINEERING
   masterTl.fromTo(narrative1, 
