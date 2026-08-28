@@ -27,6 +27,15 @@ body {
   gap: 1.5rem;
 }
 
+.pg-controls__header {
+  cursor: grab;
+  user-select: none;
+}
+
+.pg-controls__header:active {
+  cursor: grabbing;
+}
+
 .pg-controls__header h2 {
   font-size: 1.25rem;
   margin: 0 0 0.5rem 0;

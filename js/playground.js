@@ -63,6 +63,39 @@ const initPlayground = () => {
       textContainer.classList.add(theme);
     });
   });
+
+  // Make the UI Panel Draggable
+  const controlsPanel = document.querySelector('.pg-controls');
+  const controlsHeader = document.querySelector('.pg-controls__header');
+  let isDragging = false;
+  let startX, startY, initialLeft, initialTop;
+
+  controlsHeader.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    const rect = controlsPanel.getBoundingClientRect();
+    initialLeft = rect.left;
+    initialTop = rect.top;
+    
+    // Switch from bottom/left positioning to top/left pixel positioning
+    controlsPanel.style.bottom = 'auto';
+    controlsPanel.style.right = 'auto';
+    controlsPanel.style.left = `${initialLeft}px`;
+    controlsPanel.style.top = `${initialTop}px`;
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    controlsPanel.style.left = `${initialLeft + dx}px`;
+    controlsPanel.style.top = `${initialTop + dy}px`;
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+  });
 };
 
 document.addEventListener('DOMContentLoaded', initPlayground);
