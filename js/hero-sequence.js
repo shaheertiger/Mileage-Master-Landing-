@@ -43,7 +43,10 @@ export class HeroSequence {
     if (this.allFrames[0]) {
       await new Promise(resolve => {
         if (this.allFrames[0].complete) resolve();
-        else this.allFrames[0].onload = resolve;
+        else {
+          this.allFrames[0].onload = resolve;
+          this.allFrames[0].onerror = resolve; // Prevent hanging on 404
+        }
       });
       this.render(0);
     }

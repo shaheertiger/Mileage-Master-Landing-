@@ -157,7 +157,7 @@
 
 .hero__title {
   font-family: var(--display-family);
-  font-size: clamp(4rem, 12vw, 13rem); /* Slightly larger for Bebas */
+  font-size: clamp(3rem, min(11vw, 16vh), 13rem);
   font-weight: 400; /* Bebas Neue is typically 400 */
   line-height: 0.85;
   letter-spacing: 0.02em;
@@ -185,7 +185,7 @@
   top: 0;
   left: 0;
   font-family: var(--display-family);
-  font-size: clamp(4rem, 12vw, 13rem);
+  font-size: clamp(3rem, min(11vw, 16vh), 13rem);
   font-weight: 400;
   line-height: 0.85;
   letter-spacing: 0.02em;
