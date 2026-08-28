@@ -1,0 +1,146 @@
+/* ============================================================
+   MILEAGE MASTER — INSIDE THE ENGINE SEQUENCE
+   Video scrubbing architecture with UI overlays | engine.css
+   ============================================================ */
+
+#inside-engine {
+  position: relative;
+  height: 500vh;
+  background: var(--bg-void);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.engine-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+/* ── VIDEO LAYER ──────────────────────────────────────────── */
+.engine-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+}
+
+.engine-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(5,5,5,0.7) 100%);
+  pointer-events: none;
+}
+
+/* ── UI OVERLAYS ──────────────────────────────────────────── */
+.engine-ui {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ── TECHNICAL LABELS ─────────────────────────────────────── */
+.engine-label {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  opacity: 0; /* GSAP controls visibility */
+  will-change: opacity, transform;
+}
+
+.label-text {
+  font-family: var(--tech-family);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--white-100);
+  background: rgba(5,5,5,0.6);
+  backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border: 1px solid rgba(255,255,255,0.1);
+  text-transform: uppercase;
+}
+
+.label-line {
+  position: relative;
+  height: 1px;
+  background: rgba(255,255,255,0.4);
+  width: 0px; /* GSAP animates width */
+  margin-right: 12px;
+}
+
+.label-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  background: var(--brand-red);
+  border-radius: 50%;
+}
+
+/* Specific Label Positioning */
+/* These are placeholder positions assuming a central engine view */
+.label-block { top: 20%; left: 15%; flex-direction: row-reverse; }
+.label-block .label-line { margin-right: 0; margin-left: 12px; }
+.label-block .label-line::before { left: auto; right: 0; }
+
+.label-piston { top: 35%; right: 15%; }
+.label-cylinder { top: 50%; left: 15%; flex-direction: row-reverse; }
+.label-cylinder .label-line { margin-right: 0; margin-left: 12px; }
+.label-cylinder .label-line::before { left: auto; right: 0; }
+
+.label-crankshaft { top: 65%; right: 15%; }
+.label-channel { top: 80%; left: 15%; flex-direction: row-reverse; }
+.label-channel .label-line { margin-right: 0; margin-left: 12px; }
+.label-channel .label-line::before { left: auto; right: 0; }
+
+.label-lube { top: 85%; right: 15%; }
+
+/* ── CINEMATIC TEXT ───────────────────────────────────────── */
+.engine-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.engine-text h2 {
+  font-family: var(--display-family);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--white-100);
+  text-shadow: 0 4px 24px rgba(0,0,0,0.9);
+}
+
+.engine-text .red {
+  color: var(--brand-red);
+}
+
+@media (max-width: 768px) {
+  #inside-engine { height: 400vh; }
+  .engine-label {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  .label-line {
+    width: 1px !important;
+    height: 0px; /* GSAP animates height */
+    margin: 0 0 8px 0 !important;
+  }
+  .label-line::before {
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+  }
+}

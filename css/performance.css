@@ -1,0 +1,112 @@
+/* ============================================================
+   MILEAGE MASTER — ENGINE PERFORMANCE SEQUENCE
+   Video scrub and UI orchestrator | performance.css
+   ============================================================ */
+
+#performance {
+  position: relative;
+  height: 500vh;
+  background: var(--bg-void);
+}
+
+.perf-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+/* ── VIDEO LAYER & SHAKE TARGET ───────────────────────────── */
+.perf-video-wrapper {
+  position: absolute;
+  inset: -10vh -10vw; /* Oversized so shake doesn't reveal edges */
+  width: 120vw;
+  height: 120vh;
+  will-change: transform, filter;
+  transform-origin: center;
+}
+
+.perf-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0; /* GSAP controls */
+}
+
+.perf-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 30%, rgba(5,5,5,0.95) 100%);
+  pointer-events: none;
+}
+
+/* ── UI OVERLAYS ──────────────────────────────────────────── */
+.perf-ui {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── RPM COUNTER ──────────────────────────────────────────── */
+.perf-rpm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  will-change: opacity, transform;
+  mix-blend-mode: screen;
+}
+
+.rpm-label {
+  font-family: var(--tech-family);
+  font-size: 1rem;
+  letter-spacing: 0.4em;
+  color: var(--brand-red);
+  margin-bottom: var(--sp-2);
+}
+
+.rpm-value {
+  font-family: var(--display-family);
+  font-size: clamp(6rem, 15vw, 15rem);
+  font-weight: 800;
+  line-height: 0.8;
+  color: rgba(255,255,255,0.9);
+  text-shadow: 0 0 40px rgba(255,255,255,0.1), 0 0 100px rgba(196,18,48,0.2);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* ── CLIMAX COPY ──────────────────────────────────────────── */
+.perf-climax {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.perf-logo {
+  height: 40px;
+  width: auto;
+  margin-bottom: var(--sp-8);
+  filter: grayscale(100%) brightness(200%);
+  opacity: 0.5;
+}
+
+.perf-climax h2 {
+  font-size: clamp(3rem, 8vw, 7rem);
+  line-height: 1.0;
+  text-shadow: 0 8px 32px rgba(0,0,0,0.9);
+}
+
+.perf-climax .red {
+  color: var(--brand-red);
+}

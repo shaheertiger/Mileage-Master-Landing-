@@ -1,0 +1,187 @@
+/* ============================================================
+   MILEAGE MASTER — FIND YOUR OIL
+   Interactive Configurator Styles | finder.css
+   ============================================================ */
+
+#finder {
+  position: relative;
+  min-height: 100vh;
+  background: var(--bg-void);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--section-py) var(--section-px);
+  overflow: hidden;
+}
+
+.finder-container {
+  width: 100%;
+  max-width: 1200px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-12);
+}
+
+.finder-header h2 {
+  font-size: clamp(3rem, 5vw, 6rem);
+  line-height: 0.9;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+}
+
+/* ── STEPS ────────────────────────────────────────────────── */
+.f-step {
+  display: none;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.f-step.active {
+  display: block;
+  /* GSAP will handle the animation in, but this provides a fallback */
+}
+
+.f-question {
+  color: var(--metal-300);
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--sp-8);
+}
+
+/* ── BUTTON GRID ──────────────────────────────────────────── */
+.f-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--sp-4);
+}
+
+.f-btn {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: var(--sp-8) var(--sp-6);
+  color: var(--white-100);
+  font-family: var(--display-family);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.f-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--brand-red);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.3s ease;
+}
+
+.f-btn:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.3);
+  transform: translateY(-2px);
+}
+
+.f-btn:hover::before {
+  transform: scaleY(1);
+}
+
+/* ── RESULT STATE ─────────────────────────────────────────── */
+.f-result {
+  display: none; /* JS switches this to grid when active */
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-12);
+  align-items: center;
+}
+.f-result.active {
+  display: grid;
+}
+
+.f-result-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+}
+
+.f-match-summary {
+  color: var(--metal-300);
+  letter-spacing: 0.2em;
+  font-size: 0.85rem;
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.f-specs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-8);
+}
+
+.f-spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.f-spec-item .t-micro {
+  color: var(--brand-red);
+}
+
+.f-spec-val {
+  font-family: var(--tech-family);
+  font-size: 1.25rem;
+  color: var(--white-100);
+}
+
+/* Result Visual (Large Bottle) */
+.f-result-visual {
+  position: relative;
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.f-bottle-img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  z-index: 2;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8));
+}
+
+.f-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(196,18,48,0.2) 0%, transparent 60%);
+  z-index: 1;
+  border-radius: 50%;
+  animation: pulseGlow 4s infinite alternate;
+}
+
+@keyframes pulseGlow {
+  from { opacity: 0.6; transform: translate(-50%, -50%) scale(0.9); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@media (max-width: 900px) {
+  .f-result {
+    grid-template-columns: 1fr;
+  }
+  .f-result-visual {
+    order: -1;
+    height: 40vh;
+  }
+}

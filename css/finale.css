@@ -1,0 +1,201 @@
+/* ============================================================
+   MILEAGE MASTER — FINALE SEQUENCE & FOOTER
+   Video scrub, camera shake, and clean brand scene | finale.css
+   ============================================================ */
+
+#finale {
+  position: relative;
+  height: 600vh;
+  background: var(--bg-void);
+}
+
+.fin-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── VIDEO LAYER ──────────────────────────────────────────── */
+.fin-video-wrapper {
+  position: absolute;
+  inset: -10vh -10vw; /* Oversized for shake */
+  width: 120vw;
+  height: 120vh;
+  will-change: transform, filter, opacity;
+  transform-origin: center;
+}
+
+.fin-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0; /* GSAP controls */
+}
+
+/* Headlights glow effect (JS triggers opacity) */
+.fin-headlights {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 35% 60%, rgba(255,255,255,0.8) 0%, transparent 40%),
+    radial-gradient(circle at 65% 60%, rgba(255,255,255,0.8) 0%, transparent 40%);
+  mix-blend-mode: overlay;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── FINAL CTA & FOOTER OVERLAY ───────────────────────────── */
+.fin-footer {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.95); /* Deep dark overlay letting some video show through */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--sp-12) var(--section-px);
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none; /* Enabled via JS at end */
+}
+
+/* ── MAIN CTA BLOCK ───────────────────────────────────────── */
+.fin-cta-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.fin-cta-title {
+  font-size: clamp(3rem, 7vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--white-100);
+}
+
+.fin-cta-brand {
+  font-family: var(--tech-family);
+  font-size: 1.5rem;
+  letter-spacing: 0.2em;
+  color: var(--metal-300);
+  margin-bottom: var(--sp-12);
+}
+
+/* CTA Links */
+.fin-links {
+  display: flex;
+  gap: var(--sp-6);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-link {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: var(--sp-4) var(--sp-6);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  background: transparent;
+}
+
+.footer-link:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.4);
+}
+
+.btn-primary-footer {
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+}
+
+.btn-primary-footer:hover {
+  background: #a30e27;
+  border-color: #a30e27;
+}
+
+.f-text {
+  font-family: var(--tech-family);
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  color: var(--white-100);
+}
+
+.f-arrow {
+  color: var(--brand-red);
+  font-family: var(--tech-family);
+  transition: transform 0.3s ease;
+}
+
+.footer-link:hover .f-arrow {
+  transform: translateX(5px);
+}
+
+/* ── MINIMAL REAL FOOTER ──────────────────────────────────── */
+.fin-minimal-footer {
+  width: 100%;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: var(--sp-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-8);
+}
+
+.fm-top, .fm-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-6);
+}
+
+.fm-logo {
+  height: 24px;
+  width: auto;
+  filter: grayscale(100%) brightness(150%);
+  opacity: 0.8;
+}
+
+.fm-nav, .fm-social, .fm-legal {
+  display: flex;
+  gap: var(--sp-6);
+  flex-wrap: wrap;
+}
+
+.fm-nav a, .fm-social a, .fm-legal a {
+  text-decoration: none;
+  color: var(--metal-300);
+  transition: color 0.3s ease;
+}
+
+.fm-nav a:hover, .fm-social a:hover, .fm-legal a:hover {
+  color: var(--brand-red);
+}
+
+.fm-legal {
+  color: var(--metal-300);
+}
+
+@media (max-width: 900px) {
+  .fin-links {
+    flex-direction: column;
+    width: 100%;
+  }
+  .footer-link {
+    justify-content: space-between;
+  }
+  .fm-top, .fm-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -1,0 +1,212 @@
+/* ============================================================
+   MILEAGE MASTER — ENGINE COMPARISON SEQUENCE
+   Draggable Before/After Slider | comparison.css
+   ============================================================ */
+
+#comparison {
+  position: relative;
+  min-height: 100vh;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.comp-header {
+  position: absolute;
+  top: 10%;
+  text-align: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.comp-header h2 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1.0;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+}
+
+/* ── SLIDER CONTAINER ─────────────────────────────────────── */
+.comp-container {
+  /* Using a CSS variable that JS will update. Default 50% */
+  --comp-pos: 50%;
+  
+  position: relative;
+  width: 90vw;
+  max-width: 1600px;
+  height: 60vh;
+  min-height: 500px;
+  margin-top: 10vh;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+}
+
+/* ── LAYERS ───────────────────────────────────────────────── */
+.comp-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* BASE LAYER (FRICTION) */
+.comp-base {
+  background: var(--bg-void);
+}
+
+.dry-metal {
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(135deg, #1a1a1a, #2a2a2a, #1a1a1a),
+    radial-gradient(circle at 30% 50%, rgba(196,18,48,0.3) 0%, transparent 60%);
+  /* We use CSS gradients to simulate the heavy metal texture without an image */
+  background-size: 100% 100%;
+}
+
+.dry-metal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 10px);
+}
+
+/* OVERLAY LAYER (LUBRICATION) */
+.comp-overlay {
+  /* 
+   * This is the magic. 
+   * We clip the right side of this layer exactly where the handle is.
+   */
+  clip-path: polygon(0 0, var(--comp-pos) 0, var(--comp-pos) 100%, 0 100%);
+  z-index: 2;
+}
+
+.smooth-oil {
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(135deg, #1a1a1a, #222, #1a1a1a),
+    radial-gradient(circle at 70% 50%, rgba(200, 150, 50, 0.4) 0%, transparent 60%);
+}
+
+.smooth-oil::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(200, 150, 50, 0.1), transparent);
+}
+
+/* ── TEXT OVERLAYS ────────────────────────────────────────── */
+.comp-label {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.label-left {
+  left: 10%;
+  text-align: left;
+}
+
+.label-right {
+  right: 10%;
+  text-align: right;
+}
+
+.c-title {
+  font-family: var(--display-family);
+  font-size: clamp(2rem, 4vw, 4rem);
+  color: var(--white-100);
+  text-shadow: 0 4px 15px rgba(0,0,0,0.9);
+}
+
+.c-sub {
+  font-family: var(--tech-family);
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  color: var(--metal-300);
+}
+
+.label-left .c-title { color: var(--brand-red); }
+.label-right .c-title { color: var(--oil-400); }
+
+/* ── THE DRAGGABLE HANDLE ─────────────────────────────────── */
+.comp-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--comp-pos);
+  width: 40px;
+  transform: translateX(-50%);
+  z-index: 5;
+  cursor: ew-resize;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  touch-action: none; /* Prevents scroll while dragging on mobile */
+}
+
+.comp-handle::after {
+  content: '';
+  position: absolute;
+  inset: -20px; /* Expands draggable area for touch */
+}
+
+.comp-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--metal-300);
+  box-shadow: 0 0 10px rgba(0,0,0,0.8);
+  pointer-events: none;
+}
+
+.comp-knob {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  background: var(--bg-void);
+  border: 2px solid var(--metal-300);
+  border-radius: 50%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2px;
+  color: var(--metal-300);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+  pointer-events: none;
+  transition: transform 0.2s ease, border-color 0.2s, color 0.2s;
+}
+
+.comp-handle:hover .comp-knob,
+.comp-handle:active .comp-knob {
+  transform: scale(1.1);
+  border-color: var(--brand-red);
+  color: var(--brand-red);
+}
+
+@media (max-width: 768px) {
+  .comp-label {
+    top: 10%;
+    transform: none;
+  }
+  .label-left { left: 5%; }
+  .label-right { right: 5%; }
+  .c-title { font-size: 1.5rem; }
+  .c-sub { font-size: 0.75rem; }
+}

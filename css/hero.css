@@ -1,0 +1,325 @@
+/* ============================================================
+   MILEAGE MASTER — HERO CINEMATIC SEQUENCE
+   One continuous cinematic shot | hero.css
+   ============================================================ */
+
+/* ── SCENE WRAPPER ────────────────────────────────────────── */
+/* 600vh scroll travel allows for a long, controlled timeline */
+#hero {
+  position: relative;
+  height: 600vh;
+  background: #050505;
+}
+
+/* ── STICKY VIEWPORT ──────────────────────────────────────── */
+.hero__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg-void);
+}
+
+/* ── BACKGROUND LAYERS ────────────────────────────────────── */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0; /* Revealed via GSAP scroll */
+}
+
+#hero-sequence-canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* Dark vignette overlay for cinematic contrast */
+.hero__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: radial-gradient(circle at center, transparent 0%, rgba(5,5,5,0.85) 100%);
+  pointer-events: none;
+}
+
+/* ── WEBGL & PARTICLES ────────────────────────────────────── */
+#hero-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0; /* JS controls this */
+  will-change: opacity;
+}
+
+#hero-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity;
+}
+
+/* ── BOTTLE LAYER ─────────────────────────────────────────── */
+.hero__bottle-layer {
+  position: absolute;
+  top: -10vh;
+  right: 15vw;
+  z-index: 8;
+  opacity: 0;
+  transform: translateY(-50px) rotate(0deg);
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.bottle-group {
+  position: relative;
+  height: clamp(300px, 45vh, 600px);
+  width: auto;
+  aspect-ratio: 300 / 500;
+  filter: drop-shadow(0 32px 64px rgba(0,0,0,0.9)) drop-shadow(0 0 40px rgba(196,18,48,0.15));
+}
+
+.bottle-part {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  will-change: transform, opacity;
+}
+
+/* Isolate the cap (top ~16% of the image) */
+.bottle-cap {
+  clip-path: polygon(0 0, 100% 0, 100% 16%, 0 16%);
+  transform-origin: bottom right;
+}
+
+/* Isolate the body */
+.bottle-body {
+  clip-path: polygon(0 16%, 100% 16%, 100% 100%, 0 100%);
+}
+
+/* ── OIL STREAM ───────────────────────────────────────────── */
+.hero__oil-stream {
+  position: absolute;
+  top: 30vh;
+  right: 25vw;
+  width: 60px;
+  height: 45vh;
+  z-index: 7; /* Behind bottle, above engine */
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 0 12px rgba(240,180,41,0.6));
+}
+
+.hero__oil-path {
+  fill: none;
+  stroke: var(--oil-400);
+  stroke-width: 18;
+  stroke-linecap: round;
+  /* Dash setup for drawing animation */
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  will-change: stroke-dashoffset;
+}
+
+/* ── HUD OVERLAY ──────────────────────────────────────────── */
+.hero__hud {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  padding: var(--sp-24) var(--section-px) var(--sp-12);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+/* Title Block */
+.hero__title-wrap {
+  position: absolute;
+  top: 58%;
+  left: 0;
+  width: max-content;
+  transform: translateY(-50%); /* GSAP will handle X */
+}
+
+.hero__title {
+  font-family: var(--display-family);
+  font-size: clamp(4rem, 12vw, 13rem); /* Slightly larger for Bebas */
+  font-weight: 400; /* Bebas Neue is typically 400 */
+  line-height: 0.85;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--white-100);
+  margin-bottom: var(--sp-6);
+  text-shadow: 0 4px 24px rgba(0,0,0,0.8);
+}
+
+.hero__title .word.red {
+  color: var(--brand-red);
+}
+
+/* Narrative Blocks */
+.hero__narrative-wrap {
+  position: absolute;
+  top: 58%;
+  left: var(--section-px);
+  transform: translateY(-50%);
+  width: max-content;
+}
+
+.hero__narrative {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: var(--display-family);
+  font-size: clamp(4rem, 12vw, 13rem);
+  font-weight: 400;
+  line-height: 0.85;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--white-100);
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.hero__narrative .word.red {
+  color: var(--brand-red);
+}
+
+.hero__sub {
+  font-family: var(--micro-family);
+  font-size: var(--micro-size);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--metal-300);
+}
+
+/* Telemetry Block */
+.hero__telemetry {
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  background: rgba(5, 5, 5, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: var(--sp-6) var(--sp-8);
+  border-left: 2px solid var(--brand-red);
+  min-width: 240px;
+}
+
+.telemetry-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sp-8);
+}
+
+.telemetry-row--header {
+  margin-bottom: var(--sp-2);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.telemetry-label {
+  font-family: var(--micro-family);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--metal-400);
+  text-transform: uppercase;
+}
+
+.telemetry-val {
+  font-family: var(--tech-family);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: var(--white-100);
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.telemetry-val.status-val {
+  color: var(--brand-red);
+}
+
+/* ── SCROLL HINT ──────────────────────────────────────────── */
+.hero__scroll-hint {
+  position: absolute;
+  bottom: var(--sp-8);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  transition: opacity var(--dur-slow);
+}
+
+.hero__scroll-hint.hidden {
+  opacity: 0;
+}
+
+.hero__scroll-hint__label {
+  font-family: var(--micro-family);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--metal-400);
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(180deg, var(--brand-red) 0%, transparent 100%);
+  animation: pulseLine 2s infinite;
+}
+
+@keyframes pulseLine {
+  0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
+  50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  50.1% { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  #hero { height: 400vh; }
+  .hero__telemetry {
+    align-self: flex-start;
+    width: 100%;
+    margin-top: auto;
+    margin-bottom: var(--sp-16);
+  }
+  .hero__bottle-layer {
+    right: 5vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #hero { height: 100vh; }
+  .hero__sticky { position: relative; }
+  .hero__scroll-hint { display: none; }
+}
+
+@media (max-width: 768px) {
+  .hero__narrative {
+    font-size: clamp(2.5rem, 10vw, 6rem);
+    max-width: 85vw;
+    white-space: normal;
+    line-height: 0.9;
+  }
+}

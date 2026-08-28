@@ -1,0 +1,200 @@
+/* ============================================================
+   MILEAGE MASTER — PRODUCT LABORATORY
+   HUD product selector | products.css
+   ============================================================ */
+
+#laboratory {
+  position: relative;
+  min-height: 100vh;
+  background: var(--bg-void);
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 100px 100px;
+  background-position: center;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: var(--sp-16) var(--section-px);
+}
+
+.lab-container {
+  position: relative;
+  width: 100%;
+  max-width: 1800px;
+  height: 80vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  z-index: 2;
+}
+
+/* ── PANELS ───────────────────────────────────────────────── */
+.lab-panel {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.lab-title {
+  font-family: var(--tech-family);
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  color: var(--metal-400);
+  margin-bottom: var(--sp-8);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: var(--sp-4);
+}
+
+/* ── CONTROLS (LEFT) ──────────────────────────────────────── */
+.product-selector {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.automotive-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: var(--sp-4) var(--sp-6);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.automotive-btn:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.3);
+}
+
+.btn-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--metal-400);
+  transition: all 0.3s ease;
+}
+
+.automotive-btn.is-active .btn-indicator {
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+  box-shadow: 0 0 10px rgba(196,18,48,0.5);
+}
+
+.btn-text {
+  font-family: var(--tech-family);
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  color: var(--metal-300);
+  transition: color 0.3s ease;
+}
+
+.automotive-btn.is-active .btn-text {
+  color: var(--white-100);
+  font-weight: bold;
+}
+
+/* ── CENTER (RENDER) ──────────────────────────────────────── */
+.lab-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.lab-bottle-wrapper {
+  position: relative;
+  height: 65vh;
+  max-height: 800px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+}
+
+#lab-bottle-render {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 40px 80px rgba(0,0,0,0.8));
+  will-change: transform, filter;
+  /* GSAP manipulates rotationY and hue-rotate */
+}
+
+.lab-product-name {
+  position: absolute;
+  bottom: -40px;
+  text-align: center;
+  width: 100%;
+}
+
+.lab-product-name h2 {
+  font-family: var(--display-family);
+  font-size: clamp(2rem, 5vw, 4rem);
+  text-transform: uppercase;
+  color: var(--white-100);
+  text-shadow: 0 4px 24px rgba(0,0,0,0.8);
+  white-space: nowrap;
+}
+
+/* ── TELEMETRY (RIGHT) ────────────────────────────────────── */
+.telemetry-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+  border-left: 1px solid rgba(255,255,255,0.1);
+  padding-left: var(--sp-8);
+}
+
+.telemetry-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.t-label {
+  font-family: var(--tech-family);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--brand-red);
+}
+
+.t-value {
+  font-family: var(--tech-family);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: var(--white-100);
+  line-height: 1.4;
+}
+
+/* Mobile */
+@media (max-width: 1024px) {
+  .lab-container {
+    flex-direction: column;
+    height: auto;
+    gap: var(--sp-12);
+  }
+  .lab-panel {
+    flex: auto;
+  }
+  .telemetry-grid {
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-left: 0;
+    padding-top: var(--sp-8);
+  }
+  .lab-bottle-wrapper {
+    height: 40vh;
+  }
+  .lab-product-name {
+    bottom: -20px;
+  }
+}

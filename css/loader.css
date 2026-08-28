@@ -1,0 +1,318 @@
+/* ============================================================
+   MILEAGE MASTER — CINEMATIC LOADER
+   Automotive system boot sequence | loader.css
+   ============================================================ */
+
+/* ── LOADER STAGE ─────────────────────────────────────────── */
+
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-loader);
+  background: #050505;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Exit state — JS applies this class */
+#loader.is-exiting {
+  pointer-events: none;
+}
+
+/* ── CORNER SYSTEM LABELS ─────────────────────────────────── */
+/* Extremely subtle. Technical reference marks. */
+
+.loader__corner-label {
+  position: absolute;
+  font-family: var(--micro-family);
+  font-size: var(--micro-size);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(112, 112, 112, 0.22);
+  user-select: none;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s;
+}
+
+#loader.is-ready .loader__corner-label {
+  opacity: 1;
+}
+
+.loader__corner-label--tl { top: var(--sp-6); left: var(--sp-8); }
+.loader__corner-label--tr { top: var(--sp-6); right: var(--sp-8); text-align: right; }
+.loader__corner-label--bl { bottom: var(--sp-6); left: var(--sp-8); }
+.loader__corner-label--br { bottom: var(--sp-6); right: var(--sp-8); text-align: right; }
+
+/* ── CENTER CONTENT ───────────────────────────────────────── */
+
+.loader__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  opacity: 0;
+}
+
+/* ── LOGO ─────────────────────────────────────────────────── */
+
+.loader__logo-wrap {
+  margin-bottom: 36px;
+}
+
+.loader__logo {
+  width: clamp(150px, 16vw, 210px);
+  height: auto;
+  display: block;
+  /* Logo displayed at natural colors.
+     Precisely sized — no distortion. */
+}
+
+/* ── THIN SEPARATOR ───────────────────────────────────────── */
+
+.loader__sep {
+  width: clamp(180px, 22vw, 280px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.07) 30%,
+    rgba(255, 255, 255, 0.07) 70%,
+    transparent 100%
+  );
+  margin-bottom: 28px;
+}
+
+/* ── STATUS TEXT ──────────────────────────────────────────── */
+
+.loader__status {
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 18px;
+}
+
+.loader__status-text {
+  font-family: var(--micro-family);
+  font-size: var(--micro-size);
+  letter-spacing: 0.30em;
+  text-transform: uppercase;
+  color: var(--metal-400);
+  transition: color 0.4s ease;
+}
+
+.loader__status-text.is-ready {
+  color: var(--white-100);
+}
+
+/* Animated ellipsis — 3 dots that blink in sequence */
+.loader__dots {
+  font-family: var(--micro-family);
+  font-size: var(--micro-size);
+  color: var(--metal-400);
+  letter-spacing: 0.1em;
+  margin-left: 2px;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.loader__dots.is-hidden {
+  opacity: 0;
+}
+
+.loader__dots span {
+  opacity: 0;
+  animation: dotBlink 1.2s ease-in-out infinite;
+  display: inline-block;
+}
+
+.loader__dots span:nth-child(2) { animation-delay: 0.2s; }
+.loader__dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotBlink {
+  0%, 100% { opacity: 0; }
+  40%       { opacity: 1; }
+}
+
+/* ── PROGRESS BAR ─────────────────────────────────────────── */
+
+.loader__progress-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: clamp(180px, 22vw, 280px);
+}
+
+.loader__progress-track {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  position: relative;
+}
+
+.loader__progress-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0%;
+  background: var(--brand-red);
+  /* Transition handled by JS for precision */
+}
+
+/* Moving glow dot at the tip of the fill */
+.loader__progress-tip {
+  position: absolute;
+  right: -3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--red-100);
+  box-shadow: 0 0 8px var(--brand-red), 0 0 16px rgba(196, 18, 48, 0.4);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.loader__progress-fill.is-active .loader__progress-tip {
+  opacity: 1;
+}
+
+/* Progress meta row */
+.loader__progress-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Tick marks below the bar */
+.loader__ticks {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  flex: 1;
+}
+
+.loader__tick {
+  flex: 1;
+  height: 4px;
+  border-right: 1px solid rgba(112, 112, 112, 0.20);
+}
+
+.loader__tick:last-child { border-right: none; }
+
+/* Major ticks at 0, 25, 50, 75, 100 */
+.loader__tick:nth-child(5n + 1) {
+  border-right-color: rgba(112, 112, 112, 0.35);
+  height: 6px;
+}
+
+/* Percentage readout */
+.loader__percent {
+  font-family: var(--micro-family);
+  font-size: var(--micro-size);
+  letter-spacing: 0.14em;
+  color: var(--brand-red);
+  min-width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+  margin-left: var(--sp-3);
+}
+
+/* ── ENTER BUTTON ─────────────────────────────────────────── */
+
+.loader__enter {
+  margin-top: 44px;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+
+  /* Typography */
+  font-family: var(--btn-family);
+  font-size: var(--btn-size);
+  font-weight: var(--btn-weight);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--white-100);
+
+  /* Geometry */
+  padding: 0.85rem 2rem;
+  clip-path: var(--clip-slash);
+  border: 1px solid var(--brand-red);
+  background: transparent;
+  cursor: pointer;
+
+  /* Initial state */
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition:
+    background  var(--dur-fast),
+    transform   var(--dur-fast),
+    box-shadow  var(--dur-fast);
+
+  /* Breathing pulse on border — starts when ready */
+  animation: none;
+}
+
+.loader__enter.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  animation: enterPulse 2.4s ease-in-out infinite;
+}
+
+.loader__enter:hover {
+  background: var(--brand-red);
+  box-shadow: var(--glow-red-md);
+  transform: translateY(-1px);
+  animation: none; /* Stop pulse on hover */
+}
+
+.loader__enter:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Arrow icon inside button */
+.loader__enter-arrow {
+  display: inline-block;
+  transition: transform var(--dur-fast) var(--ease-out-expo);
+}
+
+.loader__enter:hover .loader__enter-arrow {
+  transform: translateX(5px);
+}
+
+/* Border breathing pulse */
+@keyframes enterPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(196, 18, 48, 0); }
+  50%       { box-shadow: 0 0 0 4px rgba(196, 18, 48, 0.12), var(--glow-red-sm); }
+}
+
+/* ── EXIT OVERLAY ─────────────────────────────────────────── */
+/* Black overlay that fades in on exit for cinematic transition */
+
+.loader__exit-overlay {
+  position: absolute;
+  inset: 0;
+  background: #050505;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .loader__logo { width: clamp(130px, 40vw, 170px); }
+  .loader__corner-label--tr,
+  .loader__corner-label--br { display: none; }
+  .loader__progress-wrap { width: 220px; }
+  .loader__enter { padding: 0.75rem 1.6rem; }
+}

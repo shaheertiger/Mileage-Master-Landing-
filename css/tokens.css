@@ -1,0 +1,338 @@
+/* ============================================================
+   MILEAGE MASTER — VISUAL DESIGN SYSTEM
+   Design Tokens | tokens.css
+   
+   The single source of truth for every visual decision.
+   Every color, scale, motion value, and surface is defined
+   here and referenced everywhere else.
+   ============================================================ */
+
+:root {
+
+  /* ────────────────────────────────────────────────────────
+     COLOR PALETTE — RAW VALUES
+     ──────────────────────────────────────────────────────── */
+
+  /* Brand Red — Use strategically. Not decoratively. */
+  --red-100: #FF4D68;   /* Highlight state        */
+  --red-200: #E52A3D;   /* Bright active           */
+  --red-300: #C41230;   /* PRIMARY brand red       */
+  --red-400: #9A0D24;   /* Deep pressed            */
+  --red-500: #6B0819;   /* Darkest red shadow      */
+
+  /* Backgrounds — Layered depth system */
+  --black-000: #000000;
+  --black-010: #050505;   /* Deepest background     */
+  --black-020: #0A0A0A;   /* Primary background     */
+  --black-030: #111111;   /* Secondary background   */
+  --black-040: #1A1A1A;   /* Graphite surface       */
+  --black-050: #242424;   /* Graphite elevated      */
+
+  /* Metal — The structural palette */
+  --metal-100: #2E2E2E;   /* Dark metal             */
+  --metal-200: #3D3D3D;   /* Metal surface          */
+  --metal-300: #525252;   /* Metal mid              */
+  --metal-400: #707070;   /* Metal light            */
+  --metal-500: #A0A0A0;   /* Silver                 */
+  --metal-600: #C8C8C8;   /* Silver bright          */
+  --metal-700: #D0D0D0;   /* Near white metal       */
+
+  /* White */
+  --white-100: #F5F5F5;   /* Primary text white     */
+  --white-200: #E8E8E8;   /* Secondary text         */
+  --white-300: #D0D0D0;   /* Tertiary               */
+
+  /* Oil Amber / Gold — Engine oil visualization ONLY */
+  --oil-100: #7A4E00;
+  --oil-200: #A66900;
+  --oil-300: #C8860A;   /* Oil amber — primary    */
+  --oil-400: #E6A020;
+  --oil-500: #F0B429;   /* Oil gold — highlight   */
+  --oil-600: #FFD566;   /* Oil catch light        */
+
+  /* ────────────────────────────────────────────────────────
+     COLOR PALETTE — SEMANTIC ALIASES
+     Use these throughout components, not raw values.
+     ──────────────────────────────────────────────────────── */
+
+  /* Backgrounds */
+  --bg-void:       var(--black-010);   /* Absolute base        */
+  --bg-primary:    var(--black-020);   /* Main page background */
+  --bg-secondary:  var(--black-030);   /* Section backgrounds  */
+  --bg-surface:    var(--black-040);   /* Card / panel         */
+  --bg-elevated:   var(--black-050);   /* Elevated panels      */
+
+  /* Brand */
+  --brand-red:     var(--red-300);
+  --brand-dark:    #231F20;
+
+  /* Text */
+  --text-primary:   var(--white-100);
+  --text-secondary: var(--metal-500);
+  --text-tertiary:  var(--metal-400);
+  --text-disabled:  var(--metal-300);
+  --text-inverse:   var(--black-020);
+
+  /* Borders & Lines */
+  --border-subtle:   rgba(255,255,255,0.06);
+  --border-default:  rgba(255,255,255,0.10);
+  --border-strong:   rgba(255,255,255,0.18);
+  --border-red:      rgba(196,18,48,0.45);
+  --border-metal:    rgba(112,112,112,0.30);
+
+  /* Interactive states */
+  --state-hover:    rgba(255,255,255,0.04);
+  --state-active:   rgba(196,18,48,0.08);
+  --state-focus:    rgba(196,18,48,0.35);
+
+  /* ────────────────────────────────────────────────────────
+     GLOWS & SHADOWS — Precise, not excessive
+     ──────────────────────────────────────────────────────── */
+
+  --glow-red-sm:  0 0 12px rgba(196,18,48,0.30);
+  --glow-red-md:  0 0 24px rgba(196,18,48,0.35), 0 0 48px rgba(196,18,48,0.15);
+  --glow-red-lg:  0 0 40px rgba(196,18,48,0.40), 0 0 80px rgba(196,18,48,0.18);
+  --glow-oil-sm:  0 0 12px rgba(240,180,41,0.28);
+  --glow-oil-md:  0 0 24px rgba(240,180,41,0.32), 0 0 48px rgba(240,180,41,0.14);
+  --glow-white:   0 0 16px rgba(245,245,245,0.08);
+
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.6);
+  --shadow-lg:  0 12px 48px rgba(0,0,0,0.7);
+  --shadow-xl:  0 24px 80px rgba(0,0,0,0.8);
+
+  /* ────────────────────────────────────────────────────────
+     TYPOGRAPHY — 8 Defined Roles
+     
+     Display    → Major cinematic headings (hero, manifesto)
+     Section    → Section titles
+     Tech-Label → HUD data labels, callout headers
+     Body       → Content, descriptions
+     Navigation → Nav links, menu items
+     Button     → CTA and control labels
+     Spec       → Technical data (viscosity grades, numbers)
+     Micro      → Tiny labels, coordinates, metadata
+     ──────────────────────────────────────────────────────── */
+
+  /* Font Stacks */
+  --font-display:   'Bebas Neue', 'Oswald', 'Barlow Condensed', sans-serif;
+  --font-body:      'Inter', 'Helvetica Neue', 'Arial', sans-serif;
+  --font-mono:      'JetBrains Mono', 'Courier New', monospace;
+
+  /* ── Role: DISPLAY ─────────────────────────────────────── */
+  --display-family:     var(--font-display);
+  --display-weight:     900;
+  --display-transform:  uppercase;
+  --display-leading:    0.88;
+  --display-tracking:   -0.01em;
+  --display-size-2xl:   clamp(6rem,  14vw, 15rem);
+  --display-size-xl:    clamp(4.5rem,10vw, 12rem);
+  --display-size-lg:    clamp(3.5rem, 8vw,  9rem);
+  --display-size-md:    clamp(2.5rem, 6vw,  7rem);
+  --display-size-sm:    clamp(2rem,   4vw,  5rem);
+
+  /* ── Role: SECTION HEADING ─────────────────────────────── */
+  --heading-family:     var(--font-display);
+  --heading-weight:     800;
+  --heading-transform:  uppercase;
+  --heading-leading:    1.0;
+  --heading-tracking:   0.02em;
+  --heading-size-lg:    clamp(2.25rem, 5vw, 4.5rem);
+  --heading-size-md:    clamp(1.75rem, 3.5vw, 3rem);
+  --heading-size-sm:    clamp(1.25rem, 2.5vw, 2rem);
+
+  /* ── Role: TECHNICAL LABEL ─────────────────────────────── */
+  --tech-family:        var(--font-mono);
+  --tech-weight:        500;
+  --tech-transform:     uppercase;
+  --tech-leading:       1.0;
+  --tech-tracking:      0.20em;
+  --tech-size-lg:       0.875rem;    /* 14px */
+  --tech-size-md:       0.75rem;     /* 12px */
+  --tech-size-sm:       0.625rem;    /* 10px */
+
+  /* ── Role: BODY ────────────────────────────────────────── */
+  --body-family:        var(--font-body);
+  --body-weight:        400;
+  --body-leading:       1.70;
+  --body-tracking:      0.01em;
+  --body-size-lg:       1.125rem;
+  --body-size-md:       1rem;
+  --body-size-sm:       0.9375rem;
+
+  /* ── Role: NAVIGATION ──────────────────────────────────── */
+  --nav-family:         var(--font-display);
+  --nav-weight:         700;
+  --nav-transform:      uppercase;
+  --nav-tracking:       0.14em;
+  --nav-size:           0.8125rem;
+
+  /* ── Role: BUTTON ──────────────────────────────────────── */
+  --btn-family:         var(--font-display);
+  --btn-weight:         800;
+  --btn-transform:      uppercase;
+  --btn-tracking:       0.14em;
+  --btn-size:           0.8125rem;
+
+  /* ── Role: SPECIFICATION ───────────────────────────────── */
+  --spec-family:        var(--font-mono);
+  --spec-weight:        400;
+  --spec-leading:       1.4;
+  --spec-tracking:      0.04em;
+  --spec-size-lg:       1.75rem;
+  --spec-size-md:       1.25rem;
+  --spec-size-sm:       0.9375rem;
+
+  /* ── Role: MICRO-LABEL ─────────────────────────────────── */
+  --micro-family:       var(--font-mono);
+  --micro-weight:       400;
+  --micro-transform:    uppercase;
+  --micro-tracking:     0.16em;
+  --micro-size:         0.5625rem;   /* 9px */
+
+  /* ────────────────────────────────────────────────────────
+     SPACING — 4px base grid
+     ──────────────────────────────────────────────────────── */
+  --sp-1:   0.25rem;    /*  4px */
+  --sp-2:   0.5rem;     /*  8px */
+  --sp-3:   0.75rem;    /* 12px */
+  --sp-4:   1rem;       /* 16px */
+  --sp-5:   1.25rem;    /* 20px */
+  --sp-6:   1.5rem;     /* 24px */
+  --sp-8:   2rem;       /* 32px */
+  --sp-10:  2.5rem;     /* 40px */
+  --sp-12:  3rem;       /* 48px */
+  --sp-16:  4rem;       /* 64px */
+  --sp-20:  5rem;       /* 80px */
+  --sp-24:  6rem;       /* 96px */
+  --sp-32:  8rem;       /* 128px */
+  --sp-40:  10rem;      /* 160px */
+  --sp-48:  12rem;      /* 192px */
+
+  /* Section padding */
+  --section-px:      clamp(var(--sp-6), 7vw, var(--sp-20));
+  --section-py:      clamp(var(--sp-16), 10vh, var(--sp-32));
+
+  /* ────────────────────────────────────────────────────────
+     LAYOUT
+     ──────────────────────────────────────────────────────── */
+  --max-width:     1440px;
+  --content-width: 1280px;
+  --narrow-width:   720px;
+
+  /* ────────────────────────────────────────────────────────
+     BREAKPOINTS (for use in JS, mirrored in CSS)
+     ──────────────────────────────────────────────────────── */
+  --bp-sm:  480px;
+  --bp-md:  768px;
+  --bp-lg:  1024px;
+  --bp-xl:  1280px;
+  --bp-2xl: 1600px;
+
+  /* ────────────────────────────────────────────────────────
+     MOTION — Automotive-grade easing
+     ──────────────────────────────────────────────────────── */
+
+  /* Easings */
+  --ease-out-expo:    cubic-bezier(0.16, 1, 0.3, 1);      /* Cinematic settle     */
+  --ease-out-quart:   cubic-bezier(0.165, 0.84, 0.44, 1); /* Smooth decelerate    */
+  --ease-inout-sine:  cubic-bezier(0.37, 0, 0.63, 1);     /* Gentle in-out        */
+  --ease-mechanical:  cubic-bezier(0.34, 1.4, 0.64, 1);   /* Slight overshoot     */
+  --ease-linear:      linear;
+  --ease-oil-flow:    cubic-bezier(0.4, 0, 0.2, 1);       /* Oil flow motion      */
+
+  /* Durations */
+  --dur-instant:   60ms;
+  --dur-fast:      150ms;
+  --dur-normal:    300ms;
+  --dur-medium:    500ms;
+  --dur-slow:      800ms;
+  --dur-cinematic: 1200ms;
+  --dur-epic:      2000ms;
+
+  /* ────────────────────────────────────────────────────────
+     BORDERS & GEOMETRY
+     ──────────────────────────────────────────────────────── */
+  --radius-none:  0;
+  --radius-sm:    2px;
+  --radius-md:    4px;
+
+  /* Clip paths — Automotive angular cuts */
+  --clip-button:  polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  --clip-card-tl: polygon(20px 0%, 100% 0%, 100% 100%, 0% 100%, 0% 20px);
+  --clip-card-tr: polygon(0% 0%, calc(100% - 20px) 0%, 100% 20px, 100% 100%, 0% 100%);
+  --clip-tile:    polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  --clip-slash:   polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+
+  /* ────────────────────────────────────────────────────────
+     HUD LANGUAGE — Technical ambient UI
+     Extremely subtle. Premium, not sci-fi.
+     ──────────────────────────────────────────────────────── */
+
+  /* Scan line texture — applied as background on overlays */
+  --hud-scanline-opacity:   0.025;
+  --hud-scanline-size:      4px;
+
+  /* Technical grid — engineering reference grid */
+  --hud-grid-opacity:       0.025;
+  --hud-grid-size:          40px;
+  --hud-grid-color:         rgba(160,160,160,0.5);
+
+  /* Measurement tick color */
+  --hud-tick-color:         rgba(112,112,112,0.35);
+  --hud-tick-size:          1px;
+
+  /* Bracket/corner mark sizes */
+  --hud-bracket-size:       28px;
+  --hud-bracket-width:      1px;
+  --hud-bracket-color:      rgba(112,112,112,0.25);
+
+  /* Telemetry text */
+  --hud-telemetry-color:    rgba(160,160,160,0.35);
+  --hud-telemetry-size:     var(--micro-size);
+
+  /* ────────────────────────────────────────────────────────
+     GRADIENTS
+     ──────────────────────────────────────────────────────── */
+
+  --gradient-section-fade:
+    linear-gradient(180deg,
+      transparent 0%,
+      rgba(5,5,5,0.6) 50%,
+      var(--bg-void) 100%);
+
+  --gradient-vignette:
+    radial-gradient(ellipse 70% 65% at 50% 50%,
+      transparent 0%,
+      rgba(5,5,5,0.65) 100%);
+
+  --gradient-vignette-bottom:
+    linear-gradient(0deg,
+      rgba(5,5,5,0.95) 0%,
+      rgba(5,5,5,0.4) 35%,
+      transparent 70%);
+
+  --gradient-red-subtle:
+    linear-gradient(135deg,
+      rgba(196,18,48,0.06) 0%,
+      transparent 60%);
+
+  --gradient-metal:
+    linear-gradient(135deg,
+      var(--metal-100) 0%,
+      var(--metal-200) 50%,
+      var(--metal-100) 100%);
+
+  /* ────────────────────────────────────────────────────────
+     Z-INDEX LAYERS
+     ──────────────────────────────────────────────────────── */
+  --z-base:      1;
+  --z-content:   10;
+  --z-sticky:    20;
+  --z-overlay:   50;
+  --z-nav:       100;
+  --z-loader:    200;
+  --z-modal:     300;
+  --z-toast:     400;
+
+}

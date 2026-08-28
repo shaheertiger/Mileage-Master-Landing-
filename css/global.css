@@ -1,0 +1,944 @@
+/* ============================================================
+   MILEAGE MASTER — GLOBAL STYLES & DESIGN SYSTEM
+   All reusable typography, components, HUD language,
+   layout utilities and animations. | global.css
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ════════════════════════════════════════════════════════════
+   RESET
+   ════════════════════════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: auto;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+img, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+ul, ol { list-style: none; }
+a { color: inherit; text-decoration: none; }
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+/* ════════════════════════════════════════════════════════════
+   SCROLLBAR
+   ════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar        { width: 3px; }
+::-webkit-scrollbar-track  { background: var(--bg-void); }
+::-webkit-scrollbar-thumb  { background: var(--brand-red); }
+
+/* ════════════════════════════════════════════════════════════
+   SELECTION
+   ════════════════════════════════════════════════════════════ */
+
+::selection {
+  background: var(--brand-red);
+  color: var(--white-100);
+}
+
+/* ════════════════════════════════════════════════════════════
+   FOCUS (accessible, on-brand)
+   ════════════════════════════════════════════════════════════ */
+
+:focus-visible {
+  outline: 1px solid var(--brand-red);
+  outline-offset: 3px;
+}
+
+/* ════════════════════════════════════════════════════════════
+   TYPOGRAPHY SYSTEM — 8 Roles
+   
+   Usage: Apply the class to the element directly.
+   Each role has size variants via modifier classes.
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Role 1: DISPLAY ──────────────────────────────────────── */
+/* Major cinematic headings. Hero text. Manifesto. */
+
+.t-display {
+  font-family: var(--display-family);
+  font-weight: var(--display-weight);
+  text-transform: var(--display-transform);
+  line-height: var(--display-leading);
+  letter-spacing: var(--display-tracking);
+  font-size: var(--display-size-xl);
+}
+
+.t-display--2xl { font-size: var(--display-size-2xl); }
+.t-display--xl  { font-size: var(--display-size-xl);  }
+.t-display--lg  { font-size: var(--display-size-lg);  }
+.t-display--md  { font-size: var(--display-size-md);  }
+.t-display--sm  { font-size: var(--display-size-sm);  }
+
+/* Italic variant for emphasis within display */
+.t-display em {
+  font-style: italic;
+  color: var(--brand-red);
+}
+
+/* ── Role 2: SECTION HEADING ──────────────────────────────── */
+/* Section titles. Named chapters. Category labels. */
+
+.t-heading {
+  font-family: var(--heading-family);
+  font-weight: var(--heading-weight);
+  text-transform: var(--heading-transform);
+  line-height: var(--heading-leading);
+  letter-spacing: var(--heading-tracking);
+  font-size: var(--heading-size-lg);
+}
+
+.t-heading--lg { font-size: var(--heading-size-lg); }
+.t-heading--md { font-size: var(--heading-size-md); }
+.t-heading--sm { font-size: var(--heading-size-sm); }
+
+/* ── Role 3: TECHNICAL LABEL ──────────────────────────────── */
+/* HUD data labels. System identifiers. Chapter numbers. */
+
+.t-tech {
+  font-family: var(--tech-family);
+  font-weight: var(--tech-weight);
+  text-transform: var(--tech-transform);
+  line-height: var(--tech-leading);
+  letter-spacing: var(--tech-tracking);
+  font-size: var(--tech-size-md);
+  color: var(--text-secondary);
+}
+
+.t-tech--lg { font-size: var(--tech-size-lg); }
+.t-tech--md { font-size: var(--tech-size-md); }
+.t-tech--sm { font-size: var(--tech-size-sm); }
+
+/* ── Role 4: BODY ─────────────────────────────────────────── */
+/* Descriptions, paragraphs, feature lists. */
+
+.t-body {
+  font-family: var(--body-family);
+  font-weight: var(--body-weight);
+  line-height: var(--body-leading);
+  letter-spacing: var(--body-tracking);
+  font-size: var(--body-size-md);
+  color: var(--text-secondary);
+}
+
+.t-body--lg { font-size: var(--body-size-lg); }
+.t-body--md { font-size: var(--body-size-md); }
+.t-body--sm { font-size: var(--body-size-sm); }
+.t-body--light { font-weight: 300; }
+
+/* ── Role 5: NAVIGATION ───────────────────────────────────── */
+/* Nav links. Mobile overlay items. Menu labels. */
+
+.t-nav {
+  font-family: var(--nav-family);
+  font-weight: var(--nav-weight);
+  text-transform: var(--nav-transform);
+  letter-spacing: var(--nav-tracking);
+  font-size: var(--nav-size);
+}
+
+/* ── Role 6: BUTTON ───────────────────────────────────────── */
+/* All CTA and control labels. */
+
+.t-btn {
+  font-family: var(--btn-family);
+  font-weight: var(--btn-weight);
+  text-transform: var(--btn-transform);
+  letter-spacing: var(--btn-tracking);
+  font-size: var(--btn-size);
+}
+
+/* ── Role 7: SPECIFICATION ────────────────────────────────── */
+/* Technical data. Viscosity grades. Numbers. Metrics. */
+
+.t-spec {
+  font-family: var(--spec-family);
+  font-weight: var(--spec-weight);
+  line-height: var(--spec-leading);
+  letter-spacing: var(--spec-tracking);
+  font-size: var(--spec-size-md);
+  color: var(--text-primary);
+}
+
+.t-spec--lg  { font-size: var(--spec-size-lg); }
+.t-spec--md  { font-size: var(--spec-size-md); }
+.t-spec--sm  { font-size: var(--spec-size-sm); }
+.t-spec--red { color: var(--brand-red); }
+.t-spec--dim { color: var(--text-tertiary); }
+
+/* ── Role 8: MICRO-LABEL ──────────────────────────────────── */
+/* Coordinate indicators. Tiny metadata. Version strings.
+   Telemetry readouts. Positions and reference marks. */
+
+.t-micro {
+  font-family: var(--micro-family);
+  font-weight: var(--micro-weight);
+  text-transform: var(--micro-transform);
+  letter-spacing: var(--micro-tracking);
+  font-size: var(--micro-size);
+  color: var(--hud-telemetry-color);
+  user-select: none;
+}
+
+/* ── Color utility modifiers ──────────────────────────────── */
+.c-red    { color: var(--brand-red);      }
+.c-white  { color: var(--text-primary);   }
+.c-silver { color: var(--text-secondary); }
+.c-dim    { color: var(--text-tertiary);  }
+.c-oil    { color: var(--oil-500);        }
+
+/* ════════════════════════════════════════════════════════════
+   BUTTON SYSTEM — Automotive Controls
+   
+   Buttons feel like physical controls. They have
+   weight, precision, and clear mechanical state changes.
+   Not pill-shaped. Not generic.
+   ════════════════════════════════════════════════════════════ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: 0.8rem 1.8rem;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+  border: none;
+  outline: none;
+  transition:
+    background   var(--dur-fast) var(--ease-out-quart),
+    box-shadow   var(--dur-fast) var(--ease-out-quart),
+    transform    var(--dur-fast) var(--ease-out-quart),
+    border-color var(--dur-fast) var(--ease-out-quart),
+    color        var(--dur-fast);
+  /* Typography */
+  font-family: var(--btn-family);
+  font-weight: var(--btn-weight);
+  font-size:   var(--btn-size);
+  letter-spacing: var(--btn-tracking);
+  text-transform: var(--btn-transform);
+  /* Automotive diagonal cut */
+  clip-path: var(--clip-button);
+}
+
+/* Sheen layer — reveals on hover */
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.12) 0%,
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity var(--dur-fast);
+  pointer-events: none;
+}
+
+.btn:hover::before { opacity: 1; }
+
+/* Active press — mechanical click feel */
+.btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+/* ── Primary — Red action button ──────────────────────────── */
+/* Use for: shop, buy, primary CTA. Sparingly. */
+
+.btn-primary {
+  background: var(--brand-red);
+  color: var(--white-100);
+}
+
+.btn-primary:hover {
+  background: var(--red-200);
+  box-shadow: var(--glow-red-md);
+  transform: translateY(-1px);
+}
+
+.btn-primary:focus-visible {
+  box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--brand-red);
+  clip-path: none;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Secondary — Dark metallic button ─────────────────────── */
+/* Use for: secondary actions, learn more. */
+
+.btn-secondary {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  clip-path: none; /* Straight edges for secondary */
+}
+
+.btn-secondary:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+/* ── Ghost — Outline only ─────────────────────────────────── */
+/* Use for: tertiary actions, overlaid on imagery. */
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  clip-path: none;
+}
+
+.btn-ghost:hover {
+  border-color: var(--brand-red);
+  color: var(--brand-red);
+}
+
+/* ── Icon button — Square control ─────────────────────────── */
+/* Use for: icon-only interactions, play, pause, etc. */
+
+.btn-icon {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  clip-path: none;
+  flex-shrink: 0;
+}
+
+.btn-icon:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--brand-red);
+}
+
+/* ── Button sizes ─────────────────────────────────────────── */
+
+.btn-sm {
+  padding: 0.55rem 1.25rem;
+  font-size: 0.75rem;
+}
+
+.btn-lg {
+  padding: 1rem 2.5rem;
+  font-size: 0.9375rem;
+  letter-spacing: 0.18em;
+}
+
+/* ── Button with arrow icon ───────────────────────────────── */
+.btn .btn-arrow {
+  display: inline-flex;
+  align-items: center;
+  transition: transform var(--dur-fast) var(--ease-out-expo);
+}
+
+.btn:hover .btn-arrow {
+  transform: translateX(4px);
+}
+
+/* ════════════════════════════════════════════════════════════
+   HUD LANGUAGE
+   
+   Extremely subtle technical ambient UI elements.
+   Think: instrument panel of a premium vehicle.
+   NOT a sci-fi interface.
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Scan lines ───────────────────────────────────────────── */
+/* Very subtle, adds slight texture to dark surfaces. */
+
+.hud-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--hud-scanline-opacity);
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(255,255,255,0.06) 3px,
+    rgba(255,255,255,0.06) 4px
+  );
+  background-size: 100% var(--hud-scanline-size);
+  z-index: var(--z-overlay);
+}
+
+/* ── Technical grid ───────────────────────────────────────── */
+/* Very faint engineering reference grid. */
+
+.hud-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--hud-grid-opacity);
+  background-image:
+    linear-gradient(var(--hud-grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hud-grid-color) 1px, transparent 1px);
+  background-size: var(--hud-grid-size) var(--hud-grid-size);
+}
+
+/* ── Corner brackets ──────────────────────────────────────── */
+/* Mechanical framing marks at corners of a contained element. */
+/* Place 4 of these inside a positioned container. */
+
+.hud-bracket {
+  position: absolute;
+  width: var(--hud-bracket-size);
+  height: var(--hud-bracket-size);
+  pointer-events: none;
+}
+
+.hud-bracket--tl {
+  top: var(--sp-4);
+  left: var(--sp-4);
+  border-top: var(--hud-bracket-width) solid var(--hud-bracket-color);
+  border-left: var(--hud-bracket-width) solid var(--hud-bracket-color);
+}
+
+.hud-bracket--tr {
+  top: var(--sp-4);
+  right: var(--sp-4);
+  border-top: var(--hud-bracket-width) solid var(--hud-bracket-color);
+  border-right: var(--hud-bracket-width) solid var(--hud-bracket-color);
+}
+
+.hud-bracket--bl {
+  bottom: var(--sp-4);
+  left: var(--sp-4);
+  border-bottom: var(--hud-bracket-width) solid var(--hud-bracket-color);
+  border-left: var(--hud-bracket-width) solid var(--hud-bracket-color);
+}
+
+.hud-bracket--br {
+  bottom: var(--sp-4);
+  right: var(--sp-4);
+  border-bottom: var(--hud-bracket-width) solid var(--hud-bracket-color);
+  border-right: var(--hud-bracket-width) solid var(--hud-bracket-color);
+}
+
+/* ── Measurement tick marks ───────────────────────────────── */
+/* Precision ticks along edges of containers. */
+
+.hud-ticks-h {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  height: 12px;
+  overflow: hidden;
+}
+
+.hud-ticks-v {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 12px;
+  overflow: hidden;
+}
+
+.hud-tick {
+  flex: 1;
+  background: var(--hud-tick-color);
+}
+
+/* Horizontal ticks */
+.hud-ticks-h .hud-tick {
+  width: var(--hud-tick-size);
+  height: 6px;
+  flex: none;
+  flex-basis: calc(100% / var(--tick-count, 20));
+}
+
+.hud-ticks-h .hud-tick:nth-child(5n) {
+  height: 10px;
+  background: rgba(112,112,112,0.5);
+}
+
+/* ── Telemetry display ────────────────────────────────────── */
+/* Small data readout like an instrument panel display. */
+
+.hud-telemetry {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-family: var(--micro-family);
+  font-size: var(--micro-size);
+  font-weight: var(--micro-weight);
+  letter-spacing: var(--micro-tracking);
+  text-transform: uppercase;
+  color: var(--hud-telemetry-color);
+  user-select: none;
+}
+
+.hud-telemetry::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  opacity: 0.6;
+  animation: hud-pulse 2s ease-in-out infinite;
+}
+
+@keyframes hud-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 0.2; }
+}
+
+.hud-telemetry__divider {
+  width: 1px;
+  height: 8px;
+  background: var(--border-subtle);
+}
+
+/* ── Coordinate label ─────────────────────────────────────── */
+/* X,Y position reference labels. */
+
+.hud-coordinate {
+  font-family: var(--micro-family);
+  font-size: var(--micro-size);
+  letter-spacing: 0.1em;
+  color: var(--hud-telemetry-color);
+  user-select: none;
+}
+
+.hud-coordinate::before {
+  content: '[';
+  opacity: 0.5;
+}
+
+.hud-coordinate::after {
+  content: ']';
+  opacity: 0.5;
+}
+
+/* ── Section number / chapter ─────────────────────────────── */
+/* Numbered chapters in a consistent format. */
+
+.hud-chapter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  align-items: center;
+}
+
+.hud-chapter__num {
+  font-family: var(--micro-family);
+  font-size: var(--micro-size);
+  letter-spacing: 0.2em;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+
+.hud-chapter__line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(
+    180deg,
+    var(--border-subtle) 0%,
+    transparent 100%
+  );
+}
+
+/* ── Horizontal rule / separator line ─────────────────────── */
+
+.hud-line {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border-default) 20%,
+    var(--border-strong) 50%,
+    var(--border-default) 80%,
+    transparent 100%
+  );
+}
+
+.hud-line--red {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--brand-red) 20%,
+    var(--red-200) 50%,
+    var(--brand-red) 80%,
+    transparent 100%
+  );
+  opacity: 0.6;
+}
+
+.hud-line--left {
+  background: linear-gradient(
+    90deg,
+    var(--border-strong) 0%,
+    var(--border-default) 60%,
+    transparent 100%
+  );
+}
+
+/* ── Callout box — technical annotation frame ─────────────── */
+/* Used in anatomy/annotation sections. */
+
+.hud-callout {
+  position: relative;
+  padding: var(--sp-4) var(--sp-5);
+  border-left: 2px solid var(--brand-red);
+  background: rgba(26,26,26,0.6);
+  backdrop-filter: blur(12px);
+}
+
+.hud-callout__id {
+  font-family: var(--micro-family);
+  font-size: var(--micro-size);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--brand-red);
+  margin-bottom: var(--sp-2);
+}
+
+.hud-callout__title {
+  font-family: var(--display-family);
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  margin-bottom: var(--sp-2);
+}
+
+.hud-callout__body {
+  font-family: var(--body-family);
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+/* ── Data readout ─────────────────────────────────────────── */
+/* Large spec number with label beneath. */
+
+.hud-data {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.hud-data__value {
+  font-family: var(--display-family);
+  font-weight: 900;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.hud-data__value--gold { color: var(--oil-500); }
+.hud-data__value--red  { color: var(--brand-red); }
+
+.hud-data__unit {
+  font-size: 0.4em;
+  vertical-align: super;
+  color: var(--text-secondary);
+}
+
+.hud-data__label {
+  font-family: var(--micro-family);
+  font-size: var(--micro-size);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hud-telemetry-color);
+  margin-top: var(--sp-2);
+}
+
+/* ════════════════════════════════════════════════════════════
+   LAYOUT SYSTEM
+   ════════════════════════════════════════════════════════════ */
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--section-px);
+}
+
+.container--narrow {
+  max-width: var(--narrow-width);
+}
+
+.container--content {
+  max-width: var(--content-width);
+}
+
+/* Full viewport section */
+.section-full {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Section with standard padding */
+.section-padded {
+  padding-block: var(--section-py);
+}
+
+/* ── Section intro header ─────────────────────────────────── */
+/* The consistent chapter header used across all sections. */
+
+.section-intro {
+  margin-bottom: var(--sp-16);
+}
+
+.section-intro__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-5);
+}
+
+.section-intro__num {
+  font-family: var(--micro-family);
+  font-size: var(--micro-size);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.section-intro__divider {
+  width: 32px;
+  height: 1px;
+  background: var(--border-default);
+  flex-shrink: 0;
+}
+
+.section-intro__label {
+  font-family: var(--micro-family);
+  font-size: var(--micro-size);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.section-intro__title {
+  font-family: var(--display-family);
+  font-weight: 900;
+  font-size: clamp(3rem, 7vw, 8rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.section-intro__sub {
+  max-width: 480px;
+  margin-top: var(--sp-6);
+  font-family: var(--body-family);
+  font-size: var(--body-size-md);
+  line-height: var(--body-leading);
+  color: var(--text-secondary);
+}
+
+/* ════════════════════════════════════════════════════════════
+   SURFACE COMPONENTS
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Dark panel — contained surface ──────────────────────── */
+.panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: var(--sp-6);
+  position: relative;
+}
+
+/* ── Spec cell — technical data container ─────────────────── */
+.spec-cell {
+  padding: var(--sp-5) var(--sp-6);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Red accent line on left edge — appears on hover */
+.spec-cell::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--brand-red);
+  transform: scaleY(0);
+  transition: transform var(--dur-normal) var(--ease-out-expo);
+}
+
+.spec-cell:hover::before {
+  transform: scaleY(1);
+}
+
+/* ════════════════════════════════════════════════════════════
+   ANIMATION UTILITIES
+   ════════════════════════════════════════════════════════════ */
+
+/* Initial hidden state for GSAP reveals */
+.will-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+/* Char-level animation target */
+.char {
+  display: inline-block;
+  overflow: hidden;
+}
+
+/* Line-level clip container */
+.line-clip {
+  display: block;
+  overflow: hidden;
+}
+
+/* ── Grain texture overlay ────────────────────────────────── */
+/* Applied as pseudo-element to sections. */
+
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.90' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  z-index: 0;
+}
+
+/* ── Vignette overlay ─────────────────────────────────────── */
+.vignette::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--gradient-vignette);
+  z-index: 1;
+}
+
+/* ════════════════════════════════════════════════════════════
+   GLOBAL SCAN LINE LAYER
+   Mounted once on #app. Very subtle ambient texture.
+   ════════════════════════════════════════════════════════════ */
+
+.global-scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--z-overlay);
+  opacity: 0.018;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(255,255,255,0.04) 3px,
+    rgba(255,255,255,0.04) 4px
+  );
+}
+
+/* ════════════════════════════════════════════════════════════
+   REDUCED MOTION
+   ════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .will-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   RESPONSIVE UTILITIES
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .hide-lg { display: none !important; }
+}
+
+@media (max-width: 768px) {
+  .hide-md { display: none !important; }
+
+  .section-intro__title {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .hide-sm { display: none !important; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   DATA TIER — Performance-based class overrides
+   Applied via JS as [data-tier="low"] on <html>
+   ════════════════════════════════════════════════════════════ */
+
+[data-tier="low"] .hud-scanlines,
+[data-tier="low"] .hud-grid,
+[data-tier="low"] .global-scanlines {
+  display: none;
+}
+
+[data-tier="low"] .grain::after {
+  display: none;
+}
+
+[data-tier="minimal"] .hud-bracket,
+[data-tier="minimal"] .hud-telemetry,
+[data-tier="minimal"] .hud-coordinate,
+[data-tier="minimal"] .hud-chapter,
+[data-tier="minimal"] .t-micro {
+  display: none;
+}

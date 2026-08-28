@@ -1,0 +1,265 @@
+/* ============================================================
+   MILEAGE MASTER — TECHNOLOGY SEQUENCE
+   Animated SVG circuit and mechanical visualizations | technology.css
+   ============================================================ */
+
+#technology {
+  position: relative;
+  height: 600vh;
+  background: var(--bg-void);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.tech-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── HEADER TITLE ─────────────────────────────────────────── */
+.tech-header {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  transform: translateY(-50%);
+  opacity: 0; /* Handled by GSAP initially */
+  will-change: opacity, transform;
+  z-index: 5;
+}
+
+.tech-header h2 {
+  font-size: clamp(3rem, 6vw, 6rem);
+  line-height: 1.0;
+  color: var(--white-100);
+}
+
+.tech-header .red {
+  color: var(--brand-red);
+}
+
+/* ── SVG CIRCUIT ──────────────────────────────────────────── */
+.tech-circuit-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.tech-svg {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  transform: translateX(-50%);
+  overflow: visible;
+}
+
+.tech-path-bg {
+  stroke: rgba(255,255,255,0.1);
+  stroke-width: 0.5;
+  fill: none;
+}
+
+.tech-path-active {
+  stroke: var(--oil-400);
+  stroke-width: 1.5;
+  fill: none;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  will-change: stroke-dashoffset;
+  filter: drop-shadow(0 0 8px var(--oil-500));
+}
+
+/* ── NODES ────────────────────────────────────────────────── */
+.tech-node {
+  position: absolute;
+  left: 50%;
+  width: 800px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.2; /* Inactive state */
+  transition: opacity 0.4s ease;
+  will-change: opacity;
+}
+
+.tech-node.is-active {
+  opacity: 1;
+}
+
+.node-point {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background: var(--bg-void);
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  transition: all 0.4s ease;
+  z-index: 2;
+}
+
+.tech-node.is-active .node-point {
+  border-color: var(--brand-red);
+  box-shadow: 0 0 20px rgba(196,18,48,0.8);
+  background: var(--brand-red);
+}
+
+.node-content {
+  position: absolute;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.node-left {
+  right: 50%;
+  margin-right: var(--sp-12);
+  text-align: right;
+  align-items: flex-end;
+}
+
+.node-right {
+  left: 50%;
+  margin-left: var(--sp-12);
+  text-align: left;
+  align-items: flex-start;
+}
+
+.node-num {
+  font-family: var(--tech-family);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: var(--metal-400);
+  transition: color 0.4s ease;
+}
+
+.tech-node.is-active .node-num {
+  color: var(--brand-red);
+}
+
+.node-title {
+  font-family: var(--display-family);
+  font-size: 2.5rem;
+  color: var(--white-100);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ── MECHANICAL VISUALIZATIONS ────────────────────────────── */
+.node-visual {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+}
+
+.node-left.node-visual { justify-content: flex-end; }
+.node-right.node-visual { justify-content: flex-start; }
+
+/* 01: LUBRICATE (Sliding rings) */
+.vis-lubricate {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+.vis-lubricate .ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 50%;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.6s;
+}
+.tech-node.is-active .vis-lubricate .r1 { transform: translateX(-15px) scale(0.8); border-color: var(--oil-500); }
+.tech-node.is-active .vis-lubricate .r2 { transform: translateX(15px) scale(0.8); border-color: var(--oil-500); }
+
+/* 02: PROTECT (Interlocking Hexagons) */
+.vis-protect {
+  display: flex;
+  gap: 2px;
+}
+.vis-protect .hex {
+  width: 24px;
+  height: 24px;
+  background: rgba(255,255,255,0.05);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  transition: all 0.4s ease;
+}
+.tech-node.is-active .vis-protect .hex {
+  background: var(--metal-300);
+}
+.tech-node.is-active .vis-protect .hex:nth-child(2) {
+  background: var(--brand-red);
+  transform: translateY(-5px);
+}
+
+/* 03: CONTROL (Thermal Waves) */
+.vis-control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+.vis-control .wave {
+  width: 40px;
+  height: 2px;
+  background: rgba(255,255,255,0.1);
+  transition: all 0.6s ease;
+}
+.tech-node.is-active .vis-control .w1 { width: 60px; background: var(--oil-400); transform: scaleX(1.5); }
+.tech-node.is-active .vis-control .w2 { width: 80px; background: var(--brand-red); transform: scaleX(1.2); }
+.tech-node.is-active .vis-control .w3 { width: 60px; background: var(--oil-400); transform: scaleX(1.5); }
+
+/* 04: PERFORM (Oscillating Bars) */
+.vis-perform {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  height: 40px;
+}
+.vis-perform .bar {
+  width: 6px;
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s;
+}
+.tech-node.is-active .vis-perform .bar {
+  background: var(--white-100);
+}
+.tech-node.is-active .vis-perform .b1 { height: 10px; }
+.tech-node.is-active .vis-perform .b2 { height: 25px; }
+.tech-node.is-active .vis-perform .b3 { height: 40px; background: var(--brand-red); }
+.tech-node.is-active .vis-perform .b4 { height: 25px; }
+.tech-node.is-active .vis-perform .b5 { height: 10px; }
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .tech-header {
+    top: 5%;
+    left: 5%;
+    transform: none;
+  }
+  .tech-header h2 { font-size: 2.5rem; }
+  
+  .tech-node {
+    width: 90vw;
+  }
+  
+  .node-left { right: auto; left: 10%; align-items: flex-start; text-align: left; margin-left: var(--sp-6); }
+  .node-right { left: auto; right: 10%; align-items: flex-end; text-align: right; margin-right: var(--sp-6); }
+  
+  .node-visual { display: none; }
+}

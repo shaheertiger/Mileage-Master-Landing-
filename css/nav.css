@@ -1,0 +1,551 @@
+/* ============================================================
+   MILEAGE MASTER — GLOBAL NAVIGATION
+   Premium automotive interface | nav.css
+   ============================================================ */
+
+/* ── NAV CONTAINER ────────────────────────────────────────── */
+
+#nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-nav);
+  height: 160px;
+  display: flex;
+  align-items: center;
+  padding-inline: var(--section-px);
+
+  /* Transparent initial state — minimal over hero */
+  background:    transparent;
+  border-bottom: 1px solid transparent;
+
+  /* Smooth transitions on all visual properties */
+  transition:
+    background      0.55s var(--ease-out-quart),
+    border-color    0.55s var(--ease-out-quart),
+    backdrop-filter 0.55s var(--ease-out-quart);
+}
+
+/* ── SCROLL STATES ────────────────────────────────────────── */
+
+/* Just begun scrolling — barely perceptible */
+#nav.nav--subtle {
+  background: rgba(5, 5, 5, 0.40);
+  backdrop-filter: blur(10px) saturate(1.1);
+  -webkit-backdrop-filter: blur(10px) saturate(1.1);
+  border-bottom-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Fully scrolled — dark translucent graphite */
+#nav.nav--solid {
+  background: rgba(8, 8, 8, 0.92);
+  backdrop-filter: blur(24px) saturate(1.25);
+  -webkit-backdrop-filter: blur(24px) saturate(1.25);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+/* ── INNER LAYOUT ─────────────────────────────────────────── */
+
+.nav__inner {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--sp-8);
+}
+
+/* ── LOGO ─────────────────────────────────────────────────── */
+
+.nav__logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity var(--dur-normal);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav__logo:hover { opacity: 0.8; }
+
+.nav__logo-text {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  padding: 16px 24px;
+  border-radius: 2px;
+  font-family: var(--display-family);
+  font-weight: 900;
+  font-size: 2.25rem;
+  line-height: 0.85;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+.nav__logo-text .l-red {
+  color: var(--brand-red);
+}
+
+.nav__logo-text .l-black {
+  color: #050505;
+}
+
+/* ── DESKTOP LINKS ────────────────────────────────────────── */
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-10);
+  list-style: none;
+  opacity: 0; /* JS reveal */
+}
+
+.nav__link {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+
+  /* Typography */
+  font-family: var(--nav-family);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+
+  /* Initially dim — nav is almost invisible over hero */
+  color: rgba(245, 245, 245, 0.32);
+
+  cursor: pointer;
+  transition: color var(--dur-normal);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Links brighten as nav scrolls into solid state */
+#nav.nav--subtle .nav__link {
+  color: rgba(245, 245, 245, 0.58);
+}
+
+#nav.nav--solid .nav__link {
+  color: rgba(245, 245, 245, 0.72);
+}
+
+/* Hover — always full white */
+.nav__link:hover {
+  color: var(--white-100);
+}
+
+/* Active link — always full white */
+.nav__link.is-active {
+  color: var(--white-100);
+}
+
+/* ── Active indicator line ────────────────────────────────── */
+/* Thin red horizontal rule beneath the active link text.
+   Expands in width when the link becomes active. */
+
+.nav__link::after {
+  content: '';
+  position: absolute;
+  bottom: -22px;            /* Below the link, sitting on nav bottom edge */
+  left: 0;
+  width: 0%;
+  height: 1px;
+  background: var(--brand-red);
+  box-shadow: 0 0 6px rgba(196, 18, 48, 0.55);
+  transition: width var(--dur-slow) var(--ease-out-expo);
+}
+
+.nav__link.is-active::after {
+  width: 100%;
+}
+
+/* ── RIGHT SIDE CTA ───────────────────────────────────────── */
+
+.nav__actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  opacity: 0; /* JS reveal */
+}
+
+.nav__cta-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0.55rem 1.4rem;
+
+  /* Typography */
+  font-family: var(--btn-family);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--white-100);
+
+  /* Initially ghost — subtle over hero */
+  background: transparent;
+  border: 1px solid rgba(196, 18, 48, 0.35);
+  clip-path: var(--clip-slash);
+  cursor: pointer;
+
+  transition:
+    background  var(--dur-fast),
+    border-color var(--dur-normal),
+    box-shadow  var(--dur-fast),
+    transform   var(--dur-fast);
+}
+
+/* Becomes more prominent on scroll */
+#nav.nav--solid .nav__cta-btn {
+  background: rgba(196, 18, 48, 0.08);
+  border-color: rgba(196, 18, 48, 0.55);
+}
+
+.nav__cta-btn:hover {
+  background: var(--brand-red);
+  border-color: var(--brand-red);
+  box-shadow: var(--glow-red-sm);
+  transform: translateY(-1px);
+}
+
+.nav__cta-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Arrow micro-icon */
+.nav__cta-arrow {
+  font-size: 0.65rem;
+  opacity: 0.7;
+  transition: transform var(--dur-fast) var(--ease-out-expo), opacity var(--dur-fast);
+}
+
+.nav__cta-btn:hover .nav__cta-arrow {
+  transform: translateX(3px);
+  opacity: 1;
+}
+
+/* ── MOBILE HAMBURGER ─────────────────────────────────────── */
+
+.nav__hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: var(--sp-2);
+  background: none;
+  border: none;
+  z-index: calc(var(--z-modal) + 5);
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+
+.nav__hamburger-line {
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: rgba(245, 245, 245, 0.70);
+  transform-origin: center;
+  transition:
+    transform   0.40s var(--ease-out-expo),
+    opacity     var(--dur-normal),
+    width       0.40s var(--ease-out-expo),
+    background  var(--dur-fast);
+}
+
+/* Third line shorter — gives asymmetric automotive feel */
+.nav__hamburger-line:last-child {
+  width: 14px;
+}
+
+/* Open state — transforms to × */
+.nav__hamburger.is-open .nav__hamburger-line:first-child {
+  transform: translateY(6px) rotate(40deg);
+  width: 20px;
+  background: var(--white-100);
+}
+
+.nav__hamburger.is-open .nav__hamburger-line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.nav__hamburger.is-open .nav__hamburger-line:last-child {
+  transform: translateY(-6px) rotate(-40deg);
+  width: 20px;
+  background: var(--white-100);
+}
+
+/* ── MOBILE OVERLAY ───────────────────────────────────────── */
+
+#nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  background: var(--bg-void);
+  display: flex;
+  flex-direction: column;
+
+  /* Slides in from right */
+  transform: translateX(100%);
+  transition: transform 0.55s var(--ease-out-expo);
+  overflow: hidden;
+}
+
+#nav-overlay.is-open {
+  transform: translateX(0);
+}
+
+/* Ambient left-edge red line */
+#nav-overlay::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15%;
+  bottom: 15%;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(196, 18, 48, 0.40) 30%,
+    rgba(196, 18, 48, 0.40) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Overlay top bar — logo + close */
+.nav-overlay__bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--section-px);
+  height: 64px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.nav-overlay__logo img {
+  height: 24px;
+  width: auto;
+  display: block;
+}
+
+.nav-overlay__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  transition: border-color var(--dur-fast), color var(--dur-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-overlay__close:hover {
+  border-color: var(--brand-red);
+  color: var(--white-100);
+}
+
+/* Overlay link list */
+.nav-overlay__links {
+  list: none;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 var(--section-px);
+  gap: 0;
+}
+
+.nav-overlay__item {
+  border-bottom: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.nav-overlay__link {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  padding: var(--sp-5) 0;
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+
+  /* Start state — off-screen right */
+  transform: translateX(48px);
+  opacity: 0;
+  transition:
+    transform 0.55s var(--ease-out-expo),
+    opacity   0.45s,
+    color     var(--dur-fast);
+}
+
+/* Staggered entrance when overlay opens */
+#nav-overlay.is-open .nav-overlay__link:nth-child(1) { transition-delay: 0.10s; transform: none; opacity: 1; }
+#nav-overlay.is-open .nav-overlay__link:nth-child(2) { transition-delay: 0.16s; transform: none; opacity: 1; }
+#nav-overlay.is-open .nav-overlay__link:nth-child(3) { transition-delay: 0.22s; transform: none; opacity: 1; }
+#nav-overlay.is-open .nav-overlay__link:nth-child(4) { transition-delay: 0.28s; transform: none; opacity: 1; }
+
+.nav-overlay__link:hover {
+  color: var(--white-100);
+}
+
+.nav-overlay__link:hover .nav-overlay__link-text {
+  color: var(--white-100);
+}
+
+.nav-overlay__link:hover .nav-overlay__link-num {
+  color: var(--brand-red);
+}
+
+/* Number prefix */
+.nav-overlay__link-num {
+  font-family: var(--micro-family);
+  font-size: var(--micro-size);
+  letter-spacing: 0.18em;
+  color: var(--metal-300);
+  flex-shrink: 0;
+  padding-top: 0.5em; /* Optical align with large text */
+  min-width: 20px;
+  transition: color var(--dur-fast);
+}
+
+/* Main link text */
+.nav-overlay__link-text {
+  font-family: var(--display-family);
+  font-size: clamp(2rem, 8vw, 4rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: rgba(245, 245, 245, 0.25);
+  transition: color var(--dur-fast);
+}
+
+/* Active section gets full white */
+.nav-overlay__link.is-active .nav-overlay__link-text {
+  color: var(--white-100);
+}
+
+.nav-overlay__link.is-active .nav-overlay__link-num {
+  color: var(--brand-red);
+}
+
+/* Overlay footer CTA */
+.nav-overlay__footer {
+  padding: var(--sp-6) var(--section-px);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+
+  transform: translateY(20px);
+  opacity: 0;
+  transition:
+    transform 0.55s var(--ease-out-expo),
+    opacity   0.45s;
+  transition-delay: 0s;
+}
+
+#nav-overlay.is-open .nav-overlay__footer {
+  transform: none;
+  opacity: 1;
+  transition-delay: 0.32s;
+}
+
+.nav-overlay__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 0.75rem 1.8rem;
+
+  font-family: var(--btn-family);
+  font-size: var(--btn-size);
+  font-weight: var(--btn-weight);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--white-100);
+
+  background: var(--brand-red);
+  border: none;
+  clip-path: var(--clip-slash);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--dur-fast), transform var(--dur-fast);
+}
+
+.nav-overlay__cta:hover {
+  background: var(--red-200);
+  transform: translateY(-1px);
+}
+
+.nav-overlay__meta {
+  font-family: var(--micro-family);
+  font-size: var(--micro-size);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--metal-300);
+}
+
+/* ── RESPONSIVE BREAKPOINTS ───────────────────────────────── */
+
+/* Below 960px: collapse to hamburger */
+@media (max-width: 960px) {
+  .nav__links  { display: none; }
+  .nav__cta-btn { display: none; }
+
+  .nav__hamburger { display: flex; }
+
+  .nav__inner {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+/* Small mobile tweaks */
+@media (max-width: 480px) {
+  #nav { height: 56px; padding-inline: var(--sp-5); }
+  .nav__logo img { height: 24px; }
+  .nav-overlay__bar { height: 56px; padding-inline: var(--sp-5); }
+  .nav-overlay__footer { padding-inline: var(--sp-5); }
+  .nav-overlay__links { padding-inline: var(--sp-5); }
+}
+
+/* ── REDUCED MOTION ───────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  #nav,
+  .nav__link,
+  .nav__link::after,
+  .nav__cta-btn,
+  #nav-overlay,
+  .nav-overlay__link,
+  .nav-overlay__footer {
+    transition: none !important;
+  }
+
+  #nav-overlay {
+    transform: none;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #nav-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
