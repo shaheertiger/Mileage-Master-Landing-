@@ -16,6 +16,7 @@ import { initFinderScene }                from './finder.js';
 import { initLaboratoryScene }            from './products.js';
 import { initStoryScene }                 from './story.js';
 import { initFinaleScene }                from './finale.js';
+import { initTweakner }                   from './tweakner.js';
 
 /*
  * Bootstrap sequence:
@@ -80,6 +81,9 @@ const init = async () => {
 
   // ── 11. Finale sequence setup ─────────────────────────────
   await initFinaleScene();
+
+  // ── 11.5 Live Design Tweakner ─────────────────────────────
+  initTweakner();
 
   // ── 12. Start Experience ──────────────────────────────────
   // Trigger hero animation immediately since loader is removed

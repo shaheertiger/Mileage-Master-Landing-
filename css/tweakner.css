@@ -1,0 +1,250 @@
+/* ============================================================
+   TWEAKNER UI & LAYOUT STYLES
+   Targeting #narrative-3
+   ============================================================ */
+
+/* ── UI Panel ────────────────────────────────────────────── */
+#tweakner-panel {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  width: 340px;
+  background: rgba(10, 10, 10, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 1.5rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  border-radius: 8px;
+}
+
+#tweakner-panel .header {
+  cursor: grab;
+  user-select: none;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+#tweakner-panel .header:active {
+  cursor: grabbing;
+}
+#tweakner-panel h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+#tweakner-panel p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.tweakner-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.tweakner-group label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.6);
+}
+.tweakner-group select {
+  width: 100%;
+  padding: 0.75rem;
+  background: #111;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  outline: none;
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.tweakner-theme-toggles {
+  display: flex;
+  gap: 0.5rem;
+}
+.tweakner-theme-toggles button {
+  flex: 1;
+  padding: 0.5rem;
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  border-radius: 4px;
+}
+.tweakner-theme-toggles button.active {
+  background: #C41230;
+  border-color: #C41230;
+  font-weight: bold;
+}
+
+
+/* ── Target Container (narrative-3) ──────────────────────── */
+.tweakner-target {
+  width: 100%;
+  position: relative;
+  transition: all 0.5s ease;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+.tweakner-target .word { 
+  display: inline-block; 
+  white-space: nowrap; 
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Color Themes ────────────────────────────────────────── */
+.tweakner-target.red-white .w1 { color: #C41230; }
+.tweakner-target.red-white .w2 { color: #fff; }
+.tweakner-target.red-white .w3 { color: #fff; }
+.tweakner-target.red-white .w4 { color: #fff; }
+.tweakner-target.red-white .w5 { color: #C41230; }
+.tweakner-target.red-white .w6 { color: #fff; }
+.tweakner-target.red-white .w7 { color: #fff; }
+.tweakner-target.red-white .w8 { color: #C41230; }
+
+.tweakner-target.all-white .word { color: #fff; -webkit-text-stroke: 0; }
+.tweakner-target.all-red .word { color: #C41230; -webkit-text-stroke: 0; }
+
+
+/* ============================================================
+   20 LAYOUT STYLES
+   ============================================================ */
+
+/* 1: Cinematic Wide */
+.style-1 { text-align: center; display: flex; flex-direction: column; align-items: center; }
+.style-1 .tweakner-brand { font-size: 6vw; display: flex; gap: 2vw; }
+.style-1 .tweakner-tagline { font-size: 4vw; display: flex; gap: 1vw; margin-top: 1vw; }
+
+/* 2: The Grid Split */
+.style-2 { text-align: left; }
+.style-2 .tweakner-brand { font-size: 5vw; display: block; }
+.style-2 .tweakner-tagline { font-size: 4vw; text-align: right; display: block; margin-top: 2vw; }
+
+/* 3: Staggered Step */
+.style-3 { display: flex; flex-direction: column; font-size: 5vw; }
+.style-3 .tweakner-brand, .style-3 .tweakner-tagline { display: flex; flex-direction: column; }
+.style-3 .w1 { margin-left: 0; }
+.style-3 .w2 { margin-left: 5vw; }
+.style-3 .w3 { margin-left: 10vw; }
+.style-3 .w4 { margin-left: 15vw; }
+.style-3 .w5 { margin-left: 20vw; }
+.style-3 .w6 { margin-left: 25vw; }
+.style-3 .w7 { margin-left: 30vw; }
+.style-3 .w8 { margin-left: 35vw; }
+
+/* 4: Brutalist Block */
+.style-4 { display: flex; flex-direction: column; }
+.style-4 .tweakner-brand { display: flex; justify-content: space-between; font-size: 8vw; }
+.style-4 .tweakner-tagline { display: flex; justify-content: space-between; font-size: 4vw; margin-top: -0.5vw;}
+
+/* 5: The Overlap Outline */
+.style-5 { position: relative; height: 30vh; }
+.style-5 .tweakner-brand {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  font-size: 10vw; color: transparent !important;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.3); display: flex; gap: 2vw; z-index: 1;
+}
+.style-5 .tweakner-tagline {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 5vw; display: flex; flex-direction: column; text-align: center; z-index: 2;
+}
+
+/* 6: Horizontal Interlock */
+.style-6 { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 1vw; font-size: 6vw; }
+.style-6 .w2 { margin-right: 4vw; }
+
+/* 7: Symmetrical Stack */
+.style-7 { display: flex; flex-direction: column; align-items: center; text-align: center; font-size: 7vw; }
+.style-7 .tweakner-brand, .style-7 .tweakner-tagline { display: flex; flex-direction: column; }
+
+/* 8: Floating Mesh */
+.style-8 { position: relative; height: 50vh; }
+.style-8 .word { position: absolute; font-size: 5vw; }
+.style-8 .w1 { top: 10%; left: 10%; }
+.style-8 .w2 { top: 20%; right: 15%; font-size: 6vw;}
+.style-8 .w3 { top: 35%; left: 15%; }
+.style-8 .w4 { top: 40%; right: 25%; font-size: 4vw;}
+.style-8 .w5 { top: 55%; left: 5%; font-size: 7vw;}
+.style-8 .w6 { top: 60%; right: 35%; }
+.style-8 .w7 { top: 75%; left: 20%; }
+.style-8 .w8 { top: 70%; right: 10%; font-size: 8vw;}
+
+/* 9: Diagonal Shift */
+.style-9 { display: flex; flex-direction: column; align-items: center; transform: rotate(-5deg); font-size: 6vw; }
+.style-9 .tweakner-brand { display: flex; gap: 2vw; }
+.style-9 .tweakner-tagline { display: flex; gap: 1vw; }
+
+/* 10: Compressed Cinematic */
+.style-10 { display: flex; flex-direction: column; text-align: center; letter-spacing: 0.2em; }
+.style-10 .tweakner-brand { font-size: 3vw; display: flex; justify-content: center; gap: 4vw; margin-bottom: 2vw;}
+.style-10 .tweakner-tagline { font-size: 5vw; display: flex; justify-content: center; gap: 3vw;}
+
+/* 11: Mega Hero Stack */
+.style-11 { text-align: center; display: flex; flex-direction: column; align-items: center; }
+.style-11 .tweakner-brand { font-size: 10vw; letter-spacing: -0.05em; display: flex; flex-direction: column; line-height: 0.8; }
+.style-11 .tweakner-tagline { font-size: 2vw; letter-spacing: 0.5em; margin-top: 2vw; display: flex; gap: 2vw; }
+
+/* 12: Split Justified */
+.style-12 { display: flex; flex-direction: column; width: 100%; }
+.style-12 .tweakner-brand { display: flex; justify-content: flex-start; font-size: 6vw; gap: 2vw; }
+.style-12 .tweakner-tagline { display: flex; justify-content: flex-end; font-size: 6vw; gap: 2vw; margin-top: 1vw; }
+
+/* 13: Frame Boxed */
+.style-13 { border: 2px solid rgba(255,255,255,0.2); padding: 4vw; display: flex; flex-direction: column; text-align: center; }
+.style-13 .tweakner-brand { font-size: 5vw; display: flex; gap: 2vw; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 2vw; margin-bottom: 2vw; }
+.style-13 .tweakner-tagline { font-size: 4vw; display: flex; flex-wrap: wrap; justify-content: center; gap: 1vw; }
+
+/* 14: Echo Overlay */
+.style-14 { position: relative; height: 35vh; }
+.style-14 .tweakner-brand { position: absolute; top: 0; left: 0; font-size: 8vw; color: rgba(255,255,255,0.1) !important; }
+.style-14 .tweakner-tagline { position: absolute; top: 4vw; left: 4vw; font-size: 8vw; display: flex; flex-direction: column; }
+
+/* 15: Tight Column */
+.style-15 { display: flex; flex-direction: row; gap: 4vw; align-items: stretch; justify-content: center; }
+.style-15 .tweakner-brand { display: flex; flex-direction: column; font-size: 7vw; text-align: right; border-right: 2px solid #C41230; padding-right: 4vw; }
+.style-15 .tweakner-tagline { display: flex; flex-direction: column; font-size: 7vw; text-align: left; }
+
+/* 16: Magazine Editorial */
+.style-16 { display: grid; grid-template-columns: 1fr 2fr; gap: 2vw; align-items: start; }
+.style-16 .tweakner-brand { font-size: 3vw; writing-mode: vertical-rl; transform: rotate(180deg); height: 100%; text-align: right; }
+.style-16 .tweakner-tagline { font-size: 8vw; display: flex; flex-direction: column; }
+
+/* 17: Circle Arc (Simulated via transforms) */
+.style-17 { display: flex; flex-direction: column; align-items: center; font-size: 5vw; }
+.style-17 .w1 { transform: rotate(-10deg) translateY(1vw); }
+.style-17 .w2 { transform: rotate(10deg) translateY(1vw); margin-left: 2vw; }
+.style-17 .tweakner-tagline { margin-top: 2vw; display: flex; gap: 1vw; }
+
+/* 18: Glitch Shift */
+.style-18 { display: flex; flex-direction: column; font-size: 6vw; text-align: center; }
+.style-18 .w1 { transform: translateX(-2vw); }
+.style-18 .w2 { transform: translateX(2vw); }
+.style-18 .w3 { transform: translateX(-1vw); }
+.style-18 .w4 { transform: translateX(3vw); }
+.style-18 .w5 { transform: translateX(-4vw); }
+.style-18 .w6 { transform: translateX(1vw); }
+.style-18 .w7 { transform: translateX(-2vw); }
+.style-18 .w8 { transform: translateX(4vw); }
+
+/* 19: Perspective */
+.style-19 { display: flex; flex-direction: column; align-items: center; font-size: 7vw; transform: perspective(1000px) rotateX(20deg); }
+.style-19 .tweakner-brand { display: flex; gap: 2vw; }
+.style-19 .tweakner-tagline { display: flex; flex-wrap: wrap; justify-content: center; gap: 1vw; }
+
+/* 20: Minimalist Inline */
+.style-20 { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 1.5vw; }
+.style-20 .tweakner-brand { font-size: 3vw; font-weight: bold; display: flex; gap: 1vw; }
+.style-20 .tweakner-tagline { font-size: 3vw; display: flex; gap: 1vw; opacity: 0.8; }
