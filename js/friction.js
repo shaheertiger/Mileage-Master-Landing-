@@ -1,53 +1,231 @@
 /* ============================================================
-   MILEAGE MASTER — PISTON ENGINE CANVAS SIMULATION
-   4-cylinder inline engine | friction.js
-   
-   State machine:
-     0.0 – 0.25  → Dry engine: slow, jerky, heat shimmer, red glow
-     0.25 – 0.55 → Oil injection: golden oil floods in from below
-     0.55 – 1.0  → Oiled engine: fast, smooth, golden sheen
+   MILEAGE MASTER — 3D PISTON ENGINE SIMULATION
+   Three.js procedural inline 4-cylinder | friction.js
    ============================================================ */
 
 export const initFrictionScene = async () => {
   const gsap = window.gsap;
   const ScrollTrigger = window.ScrollTrigger;
-  if (!gsap || !ScrollTrigger) return;
+  const THREE = window.THREE;
+  
+  if (!gsap || !ScrollTrigger || !THREE) {
+    console.warn("Missing dependencies for friction scene.");
+    return;
+  }
 
   const section = document.getElementById('friction');
   const sticky  = section?.querySelector('.friction-sticky');
-  const canvas  = document.getElementById('piston-canvas');
-  if (!section || !sticky || !canvas) return;
+  const simContainer = section?.querySelector('.friction-sim');
+  
+  if (!section || !sticky || !simContainer) return;
 
-  const ctx = canvas.getContext('2d');
+  // Clear existing canvas if any
+  simContainer.innerHTML = '';
+
   const meterFriction   = section.querySelector('.meter-friction');
   const meterHeat       = section.querySelector('.meter-heat');
   const meterProtection = section.querySelector('.meter-protection');
   const textGroup       = section.querySelector('.friction-text');
 
-  // ── Engine state (driven by scroll) ───────────────────────
+  // ── Engine State ─────────────────────────────────────────
   const state = {
-    progress: 0,      // 0→1 from scroll
-    crankAngle: 0,    // radians, continuously advancing
-    oilLevel: 0,      // 0→1
-    speed: 0.8,       // radians per frame (increases with oil)
+    progress: 0,
+    crankAngle: 0,
+    oilLevel: 0,
+    speed: 0.05,
     heatAlpha: 1.0,
-    jitter: 3,        // px shake for dry state
-    time: 0,
+    jitter: 0,
   };
 
-  // Resize canvas to fill container at 2× DPR
-  const resize = () => {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width  = sticky.offsetWidth  * dpr;
-    canvas.height = sticky.offsetHeight * dpr;
-    canvas.style.width  = sticky.offsetWidth  + 'px';
-    canvas.style.height = sticky.offsetHeight + 'px';
-    ctx.scale(dpr, dpr);
-  };
-  resize();
-  window.addEventListener('resize', () => { ctx.setTransform(1,0,0,1,0,0); resize(); }, { passive: true });
+  // ── 1. THREE.JS SETUP ────────────────────────────────────
+  const scene = new THREE.Scene();
+  // Deep dark garage background
+  scene.background = new THREE.Color(0x050505);
+  // Add some subtle fog for depth
+  scene.fog = new THREE.Fog(0x050505, 50, 150);
 
-  // ── Scroll trigger updates state ──────────────────────────
+  const camera = new THREE.PerspectiveCamera(35, sticky.offsetWidth / sticky.offsetHeight, 1, 1000);
+  camera.position.set(0, 15, 90); // Look slightly down at the engine
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+  renderer.setSize(sticky.offsetWidth, sticky.offsetHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  // High quality rendering
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.2;
+  
+  simContainer.appendChild(renderer.domElement);
+
+  // Resize handler
+  window.addEventListener('resize', () => {
+    camera.aspect = sticky.offsetWidth / sticky.offsetHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(sticky.offsetWidth, sticky.offsetHeight);
+  }, { passive: true });
+
+  // ── 2. LIGHTING (Cinematic Studio Setup) ──────────────────
+  const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+  scene.add(ambient);
+
+  // Key light (cool white)
+  const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
+  keyLight.position.set(20, 50, 30);
+  scene.add(keyLight);
+
+  // Fill light (warm rim light)
+  const fillLight = new THREE.DirectionalLight(0xffaa55, 1.5);
+  fillLight.position.set(-30, -10, -30);
+  scene.add(fillLight);
+  
+  // Overhead reflection light
+  const topLight = new THREE.PointLight(0xffffff, 1, 100);
+  topLight.position.set(0, 40, 0);
+  scene.add(topLight);
+
+  // Heat glow (Red light from bottom)
+  const heatLight = new THREE.PointLight(0xff2200, 0, 100);
+  heatLight.position.set(0, -10, 10);
+  scene.add(heatLight);
+
+  // ── 3. MATERIALS ─────────────────────────────────────────
+  const matSteel = new THREE.MeshStandardMaterial({
+    color: 0xdddddd,
+    metalness: 0.9,
+    roughness: 0.2,
+    envMapIntensity: 1.0
+  });
+
+  const matDarkMetal = new THREE.MeshStandardMaterial({
+    color: 0x444444,
+    metalness: 0.8,
+    roughness: 0.4,
+  });
+  
+  const matChrome = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    metalness: 1.0,
+    roughness: 0.1,
+  });
+
+  // Physically based transparent fluid material for oil
+  const matOil = new THREE.MeshPhysicalMaterial({
+    color: 0xffaa00,
+    metalness: 0.1,
+    roughness: 0.0,
+    transmission: 0.9, // glass-like
+    transparent: true,
+    opacity: 1.0,
+    ior: 1.5,
+    thickness: 5.0,
+  });
+
+  // ── 4. BUILD ENGINE ──────────────────────────────────────
+  const engineGroup = new THREE.Group();
+  scene.add(engineGroup);
+
+  // Engine dimensions
+  const N = 4;
+  const crankR = 6;
+  const rodLen = 22;
+  const spacing = 14;
+  const pistonR = 5.5;
+  const pistonH = 10;
+  const fireOffsets = [0, Math.PI, Math.PI * 1.5, Math.PI * 0.5]; // 1-3-4-2
+
+  // Center engine
+  const startX = -((N - 1) * spacing) / 2;
+
+  const pistons = [];
+  const rods = [];
+  const throws = [];
+
+  // Geometries
+  const geoPiston = new THREE.CylinderGeometry(pistonR, pistonR, pistonH, 32);
+  const geoPin = new THREE.CylinderGeometry(1.5, 1.5, pistonR * 2.2, 16);
+  geoPin.rotateZ(Math.PI / 2);
+  
+  const geoRod = new THREE.BoxGeometry(pistonR * 0.8, rodLen, pistonR * 0.6);
+  const geoCrankMain = new THREE.CylinderGeometry(2, 2, spacing * (N + 1), 16);
+  geoCrankMain.rotateZ(Math.PI / 2);
+  
+  const geoCounterweight = new THREE.BoxGeometry(3, crankR * 2.5, pistonR * 1.5);
+  const geoCrankPin = new THREE.CylinderGeometry(1.8, 1.8, pistonR * 1.2, 16);
+  geoCrankPin.rotateZ(Math.PI / 2);
+
+  // Main Crankshaft Axis
+  const mainCrank = new THREE.Mesh(geoCrankMain, matDarkMetal);
+  mainCrank.position.y = -rodLen - crankR + 10; // Base offset
+  engineGroup.add(mainCrank);
+
+  for (let i = 0; i < N; i++) {
+    const cx = startX + i * spacing;
+
+    // ── Piston ──
+    const pGroup = new THREE.Group();
+    pGroup.position.x = cx;
+    
+    const pistonMesh = new THREE.Mesh(geoPiston, matSteel);
+    pGroup.add(pistonMesh);
+    
+    // Piston Rings (Visual details)
+    for(let r=0; r<3; r++){
+      const ring = new THREE.Mesh(
+        new THREE.CylinderGeometry(pistonR + 0.1, pistonR + 0.1, 0.4, 32),
+        matChrome
+      );
+      ring.position.y = pistonH/2 - 2 - (r * 1.2);
+      pGroup.add(ring);
+    }
+
+    // Wrist Pin
+    const pinMesh = new THREE.Mesh(geoPin, matChrome);
+    pinMesh.position.y = -pistonH * 0.2;
+    pGroup.add(pinMesh);
+
+    engineGroup.add(pGroup);
+    pistons.push(pGroup);
+
+    // ── Connecting Rod ──
+    const rGroup = new THREE.Group();
+    rGroup.position.x = cx;
+    
+    // We pivot the rod from the top (wrist pin)
+    const rodMesh = new THREE.Mesh(geoRod, matDarkMetal);
+    rodMesh.position.y = -rodLen / 2;
+    rGroup.add(rodMesh);
+    
+    engineGroup.add(rGroup);
+    rods.push(rGroup);
+
+    // ── Crankshaft Throw ──
+    const tGroup = new THREE.Group();
+    tGroup.position.x = cx;
+    tGroup.position.y = mainCrank.position.y;
+    
+    const cw1 = new THREE.Mesh(geoCounterweight, matDarkMetal);
+    cw1.position.set(-pistonR*0.7, -crankR*0.5, 0);
+    const cw2 = new THREE.Mesh(geoCounterweight, matDarkMetal);
+    cw2.position.set(pistonR*0.7, -crankR*0.5, 0);
+    
+    const cPin = new THREE.Mesh(geoCrankPin, matChrome);
+    cPin.position.y = crankR;
+
+    tGroup.add(cw1);
+    tGroup.add(cw2);
+    tGroup.add(cPin);
+    
+    engineGroup.add(tGroup);
+    throws.push(tGroup);
+  }
+
+  // ── 5. OIL FLUID MESH ────────────────────────────────────
+  const oilGeo = new THREE.BoxGeometry(spacing * N + 20, rodLen * 2.5, 40);
+  const oilMesh = new THREE.Mesh(oilGeo, matOil);
+  oilMesh.position.y = -100; // start hidden below
+  scene.add(oilMesh);
+
+  // ── 6. SCROLL TRIGGER LOGIC ──────────────────────────────
   ScrollTrigger.create({
     trigger: section,
     pin: sticky,
@@ -58,446 +236,117 @@ export const initFrictionScene = async () => {
       const p = self.progress;
       state.progress = p;
 
-      // Oil floods in between 0.25 and 0.55
       if (p < 0.25) {
         state.oilLevel = 0;
-        state.speed    = 0.018 + Math.random() * 0.008; // slow & jerky
-        state.jitter   = 3;
+        state.speed    = 0.05; // Slow, struggling
         state.heatAlpha = 1.0;
+        state.jitter = 0.5;
       } else if (p < 0.55) {
         const sub = (p - 0.25) / 0.30;
         state.oilLevel  = sub;
-        state.speed     = 0.018 + sub * 0.07;
-        state.jitter    = 3 * (1 - sub);
+        state.speed     = 0.05 + sub * 0.15;
         state.heatAlpha = 1 - sub;
+        state.jitter = 0.5 * (1 - sub);
       } else {
         state.oilLevel  = 1;
-        state.speed     = 0.088; // fast & smooth
-        state.jitter    = 0;
+        state.speed     = 0.3; // Fast, smooth
         state.heatAlpha = 0;
+        state.jitter = 0;
       }
 
       updateMeters(p, meterFriction, meterHeat, meterProtection);
     }
   });
 
-  // Text fade in
   if (textGroup) gsap.fromTo(textGroup, { opacity: 0 }, { opacity: 1, duration: 0.5 });
 
-  // ── RENDER LOOP ───────────────────────────────────────────
+  // ── 7. ANIMATION LOOP ────────────────────────────────────
   let rafId;
-  const W = () => canvas.width  / (window.devicePixelRatio <= 2 ? Math.min(window.devicePixelRatio, 2) : 2);
-  const H = () => canvas.height / (window.devicePixelRatio <= 2 ? Math.min(window.devicePixelRatio, 2) : 2);
+  const clock = new THREE.Clock();
 
-  const draw = () => {
-    rafId = requestAnimationFrame(draw);
-    state.time++;
+  const render = () => {
+    rafId = requestAnimationFrame(render);
+    const time = clock.getElapsedTime();
+
+    // Advance engine phase
     state.crankAngle += state.speed;
 
-    const w = sticky.offsetWidth;
-    const h = sticky.offsetHeight;
-    ctx.clearRect(0, 0, w, h);
+    // Apply Engine Kinematics
+    for (let i = 0; i < N; i++) {
+      const angle = state.crankAngle + fireOffsets[i];
+      
+      // 1. Rotate Crank Throw
+      throws[i].rotation.z = angle;
 
-    // Background
-    ctx.fillStyle = '#070707';
-    ctx.fillRect(0, 0, w, h);
+      // Crank pin world position Y relative to main crank axis
+      const crankPinYLocal = crankR * Math.cos(angle);
+      const crankPinXLocal = -crankR * Math.sin(angle); // negative because rotation Z is CCW
 
-    // Draw the engine
-    drawEngine(ctx, w, h, state);
+      // 2. Calculate Piston Position (Slider-Crank geometry)
+      const ratio = crankR / rodLen;
+      // Formula: Y = R*cos(A) + L*sqrt(1 - (R/L*sin(A))^2)
+      const pistonOffset = crankR * Math.cos(angle) + rodLen * Math.sqrt(1 - Math.pow(ratio * Math.sin(angle), 2));
+      
+      const pY = mainCrank.position.y + pistonOffset;
+      
+      // Apply jitter if dry
+      const jY = (Math.random() - 0.5) * state.jitter;
+      pistons[i].position.y = pY + jY;
+
+      // 3. Connect Rod
+      const wristPinY = pY - pistonH * 0.2;
+      rods[i].position.y = wristPinY;
+      
+      // Rod angle: asin((R * sin(A)) / L)
+      const rodAngle = Math.asin((crankR * Math.sin(angle)) / rodLen);
+      rods[i].rotation.z = rodAngle;
+    }
+
+    // Animate Oil
+    if (state.oilLevel > 0) {
+      // Base Y is bottom of engine
+      const bottomY = mainCrank.position.y - crankR - 10;
+      const topY = 20; // Top of stroke approx
+      const range = topY - bottomY;
+      
+      oilMesh.position.y = bottomY + (range * state.oilLevel) - (oilGeo.parameters.height / 2);
+      
+      // Animate oil material a bit
+      matOil.opacity = 0.7 + (state.oilLevel * 0.3);
+      
+      // Tint engine metal slightly golden when submerged
+      matSteel.color.setHex(0xdddddd).lerp(new THREE.Color(0xffeeba), state.oilLevel * 0.4);
+    } else {
+      oilMesh.position.y = -100;
+      matSteel.color.setHex(0xdddddd);
+    }
+
+    // Heat Light
+    heatLight.intensity = state.heatAlpha * 5;
+    
+    // Slight camera shake when dry
+    if (state.jitter > 0) {
+      camera.position.x = (Math.random() - 0.5) * state.jitter * 0.5;
+      camera.position.y = 15 + (Math.random() - 0.5) * state.jitter * 0.5;
+    } else {
+      camera.position.x = 0;
+      camera.position.y = 15;
+    }
+
+    renderer.render(scene, camera);
   };
 
-  draw();
+  render();
 
-  // Clean up on section leave
+  // Cleanup
   ScrollTrigger.create({
     trigger: section,
     start: 'top bottom',
     end: 'bottom top',
     onLeave: () => cancelAnimationFrame(rafId),
-    onEnterBack: () => draw(),
+    onEnterBack: () => render(),
   });
 };
-
-/* ─────────────────────────────────────────────────────────── 
-   HYPER-REALISTIC ENGINE DRAWING (Pseudo-3D Canvas)
-   ─────────────────────────────────────────────────────────── */
-function drawEngine(ctx, W, H, state) {
-  const { crankAngle, oilLevel, heatAlpha, jitter, time } = state;
-
-  // Engine layout constants
-  const N = 4;                         // cylinders
-  const crankR  = H * 0.085;          // crank throw radius
-  const rodLen  = H * 0.24;           // connecting rod length
-  const pistonW = Math.min(W / 8, 140);
-  const pistonH = pistonW * 0.8;
-  const cylW    = pistonW + 24;
-  const cylH    = H * 0.45;
-  const spacing = W / (N + 1);
-  const crankY  = H * 0.75;           // crankshaft Y centre
-  const topWall = H * 0.05;           // top of cylinders
-
-  // Fire order offsets: 1-3-4-2 → 0°, 180°, 270°, 90°
-  const fireOffsets = [0, Math.PI, Math.PI * 1.5, Math.PI * 0.5];
-
-  // ── OIL FLOOD from bottom ─────────────────────────────────
-  if (oilLevel > 0) {
-    const oilTop = H - (H * 0.85 * oilLevel);
-    const oilGrad = ctx.createLinearGradient(0, oilTop, 0, H);
-    oilGrad.addColorStop(0,   `rgba(255, 180, 20, ${Math.min(oilLevel, 0.95)})`);
-    oilGrad.addColorStop(0.3, `rgba(180, 110, 5,  ${Math.min(oilLevel, 0.95)})`);
-    oilGrad.addColorStop(1,   `rgba(80,  40,  0,  ${Math.min(oilLevel, 0.98)})`);
-    ctx.fillStyle = oilGrad;
-    ctx.fillRect(0, oilTop, W, H - oilTop);
-
-    // Dynamic oil surface wave & froth
-    if (oilLevel > 0.05) {
-      ctx.beginPath();
-      ctx.moveTo(0, oilTop);
-      for (let x = 0; x <= W; x += 10) {
-        // Complex wave function for fluid look
-        const waveY = oilTop + (Math.sin(x * 0.01 + time * 0.15) * 5 + Math.cos(x * 0.02 - time * 0.1) * 3) * oilLevel;
-        ctx.lineTo(x, waveY);
-      }
-      ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath();
-      ctx.fillStyle = `rgba(255,210,60,${oilLevel * 0.4})`;
-      ctx.fill();
-      
-      // Surface highlight
-      ctx.beginPath();
-      ctx.moveTo(0, oilTop);
-      for (let x = 0; x <= W; x += 10) {
-        const waveY = oilTop + (Math.sin(x * 0.01 + time * 0.15) * 5 + Math.cos(x * 0.02 - time * 0.1) * 3) * oilLevel;
-        ctx.lineTo(x, waveY);
-      }
-      ctx.strokeStyle = `rgba(255,240,180,${oilLevel * 0.8})`;
-      ctx.lineWidth = 3;
-      ctx.stroke();
-    }
-  }
-
-  // ── HEAT SHIMMER BACKGROUND (dry state) ───────────────────
-  if (heatAlpha > 0) {
-    const hg = ctx.createRadialGradient(W/2, H*0.5, 0, W/2, H*0.5, W*0.7);
-    hg.addColorStop(0,   `rgba(220, 30, 0, ${0.4 * heatAlpha})`);
-    hg.addColorStop(0.5, `rgba(120, 10, 20, ${0.2 * heatAlpha})`);
-    hg.addColorStop(1,   'transparent');
-    ctx.fillStyle = hg;
-    ctx.fillRect(0, 0, W, H);
-  }
-
-  // Helper: Chrome/Steel metal gradient for cylinders/rods
-  const getChromeGradient = (x1, y1, x2, y2) => {
-    const g = ctx.createLinearGradient(x1, y1, x2, y2);
-    g.addColorStop(0, '#111');
-    g.addColorStop(0.15, '#555');
-    g.addColorStop(0.25, '#fff'); // Sharp specular highlight
-    g.addColorStop(0.35, '#888');
-    g.addColorStop(0.6, '#333');
-    g.addColorStop(0.8, '#666'); // Edge bounce light
-    g.addColorStop(1, '#0a0a0a');
-    return g;
-  };
-
-  const jx = jitter > 0 ? (Math.random() - 0.5) * jitter : 0;
-  const jy = jitter > 0 ? (Math.random() - 0.5) * jitter : 0;
-  ctx.save();
-  ctx.translate(jx, jy);
-
-  // ── 1. ENGINE BLOCK / CYLINDERS (Background) ─────────────
-  for (let i = 0; i < N; i++) {
-    const cx = spacing * (i + 1);
-    const wallX = cx - cylW / 2;
-    
-    // Deep cast iron cylinder bore
-    const boreGrad = ctx.createLinearGradient(wallX, 0, wallX + cylW, 0);
-    boreGrad.addColorStop(0,    '#050505');
-    boreGrad.addColorStop(0.1,  '#1a1a1a');
-    boreGrad.addColorStop(0.5,  '#2a2a2a');
-    boreGrad.addColorStop(0.9,  '#1a1a1a');
-    boreGrad.addColorStop(1,    '#050505');
-    ctx.fillStyle = boreGrad;
-    ctx.fillRect(wallX, topWall, cylW, cylH);
-    
-    // Cylinder bevel/edge
-    ctx.strokeStyle = '#444';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(wallX, topWall, cylW, cylH);
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(wallX - 2, topWall - 2, cylW + 4, cylH + 4);
-    
-    // Top deck plate
-    const deckGrad = ctx.createLinearGradient(wallX - 10, topWall - 30, wallX - 10, topWall);
-    deckGrad.addColorStop(0, '#888');
-    deckGrad.addColorStop(1, '#333');
-    ctx.fillStyle = deckGrad;
-    ctx.fillRect(wallX - 12, topWall - 25, cylW + 24, 25);
-    // Deck highlight
-    ctx.fillStyle = '#aaa';
-    ctx.fillRect(wallX - 12, topWall - 25, cylW + 24, 2);
-  }
-
-  // ── 2. CRANKSHAFT & RODS (Back-to-Front layering) ───────
-  
-  // A. Main Journals (The axis the crank spins on)
-  const mainJournalGrad = ctx.createLinearGradient(0, crankY - 20, 0, crankY + 20);
-  mainJournalGrad.addColorStop(0, '#222');
-  mainJournalGrad.addColorStop(0.2, '#999');
-  mainJournalGrad.addColorStop(0.5, '#eee');
-  mainJournalGrad.addColorStop(0.8, '#444');
-  mainJournalGrad.addColorStop(1, '#111');
-  
-  ctx.fillStyle = mainJournalGrad;
-  ctx.fillRect(spacing * 0.4, crankY - 18, spacing * (N + 0.2), 36);
-  
-  // Dark shadow lines for main journal gaps
-  for (let i = 0; i <= N; i++) {
-    const x = spacing * 0.5 + i * spacing;
-    ctx.fillStyle = '#000';
-    ctx.fillRect(x - 5, crankY - 20, 10, 40);
-  }
-
-  // Pre-calculate positions
-  const pistons = [];
-  for (let i = 0; i < N; i++) {
-    const cx = spacing * (i + 1);
-    const angle = crankAngle + fireOffsets[i];
-    const crankPinX = cx + crankR * Math.sin(angle);
-    const crankPinY = crankY - crankR * Math.cos(angle);
-    const ratio = crankR / rodLen;
-    const pistonY = crankY - crankR * Math.cos(angle) - rodLen * Math.sqrt(1 - Math.pow(ratio * Math.sin(angle), 2));
-    pistons.push({ i, cx, angle, crankPinX, crankPinY, pistonY, z: Math.cos(angle) });
-  }
-
-  // Sort by Z (crank angle depth) so rods rotating backwards are drawn first
-  // Actually, standard inline engine rods don't overlap much, but crank counterweights do.
-  // We'll just draw sequentially, it's an orthographic-ish projection anyway.
-
-  for (let p of pistons) {
-    const { cx, angle, crankPinX, crankPinY, pistonY } = p;
-    const px = cx - pistonW / 2;
-    const py = pistonY;
-    const wristPinY = py + pistonH * 0.6; // Where rod connects to piston
-
-    // ── B. Crankshaft Counterweights ──
-    ctx.save();
-    ctx.translate(cx, crankY);
-    ctx.rotate(-angle); // rotate to match throw
-    
-    // Draw heavy metallic lobe
-    const lobeGrad = ctx.createLinearGradient(-30, 0, 30, 0);
-    lobeGrad.addColorStop(0, '#111'); lobeGrad.addColorStop(0.5, '#555'); lobeGrad.addColorStop(1, '#111');
-    ctx.fillStyle = lobeGrad;
-    ctx.beginPath();
-    ctx.moveTo(-40, 20);
-    ctx.lineTo(40, 20);
-    ctx.arc(0, crankR + 25, 55, 0, Math.PI, false);
-    ctx.closePath();
-    ctx.fill();
-    // Lobe bevel highlight
-    ctx.strokeStyle = '#777';
-    ctx.lineWidth = 3;
-    ctx.stroke();
-    
-    // Throw arm to rod journal
-    const armGrad = ctx.createLinearGradient(-25, 0, 25, 0);
-    armGrad.addColorStop(0, '#222'); armGrad.addColorStop(0.3, '#888'); armGrad.addColorStop(0.8, '#333');
-    ctx.fillStyle = armGrad;
-    ctx.fillRect(-25, -crankR - 20, 50, crankR + 40);
-    ctx.restore();
-
-    // ── C. Connecting Rod ──
-    ctx.save();
-    // Angle of the rod
-    const dx = crankPinX - cx;
-    const dy = crankPinY - wristPinY;
-    const rodAngle = Math.atan2(dy, dx) - Math.PI/2;
-    
-    ctx.translate(cx, wristPinY);
-    ctx.rotate(rodAngle);
-    
-    const rLen = Math.sqrt(dx*dx + dy*dy);
-    const rodW = pistonW * 0.22;
-    
-    // Rod shadow
-    ctx.shadowColor = 'rgba(0,0,0,0.8)';
-    ctx.shadowBlur = 10;
-    ctx.shadowOffsetX = 5;
-    ctx.shadowOffsetY = 5;
-    
-    // Main rod body (I-Beam)
-    const rodGrad = getChromeGradient(-rodW/2, 0, rodW/2, 0);
-    ctx.fillStyle = rodGrad;
-    ctx.beginPath();
-    // Top eye (wrist pin end)
-    ctx.arc(0, 0, rodW * 1.1, Math.PI, 0);
-    // Tapered body
-    ctx.lineTo(rodW * 1.5, rLen);
-    // Bottom eye (crank pin end)
-    ctx.arc(0, rLen, rodW * 1.6, 0, Math.PI);
-    ctx.lineTo(-rodW * 1.1, 0);
-    ctx.closePath();
-    ctx.fill();
-    
-    // Clear shadow for inner details
-    ctx.shadowColor = 'transparent';
-    
-    // I-Beam inner recess
-    const recessGrad = ctx.createLinearGradient(-rodW/2, 0, rodW/2, 0);
-    recessGrad.addColorStop(0, '#050505'); recessGrad.addColorStop(0.5, '#222'); recessGrad.addColorStop(1, '#111');
-    ctx.fillStyle = recessGrad;
-    ctx.beginPath();
-    ctx.moveTo(-rodW*0.4, rodW*1.2);
-    ctx.lineTo(rodW*0.4, rodW*1.2);
-    ctx.lineTo(rodW*0.6, rLen - rodW*1.6);
-    ctx.lineTo(-rodW*0.6, rLen - rodW*1.6);
-    ctx.fill();
-    
-    // End caps and bolts on bottom journal
-    ctx.fillStyle = '#000';
-    ctx.fillRect(-rodW*1.8, rLen - 2, rodW*3.6, 4); // Split line
-    
-    // Rod bearing hole at bottom
-    ctx.fillStyle = '#111';
-    ctx.beginPath(); ctx.arc(0, rLen, rodW * 0.9, 0, Math.PI*2); ctx.fill();
-    // Inner journal pin shining through
-    const pinGrad = getChromeGradient(-rodW*0.9, 0, rodW*0.9, 0);
-    ctx.fillStyle = pinGrad;
-    ctx.beginPath(); ctx.arc(0, rLen, rodW * 0.7, 0, Math.PI*2); ctx.fill();
-
-    ctx.restore();
-
-    // ── D. PISTON ──
-    
-    // Oil sheen on piston skirt (if oiled)
-    if (oilLevel > 0) {
-      ctx.save();
-      ctx.globalAlpha = oilLevel * 0.8;
-      const oilSheen = ctx.createLinearGradient(px, py, px + pistonW, py);
-      oilSheen.addColorStop(0, 'rgba(255, 180, 20, 0.4)');
-      oilSheen.addColorStop(0.2, 'rgba(255, 220, 100, 0.8)');
-      oilSheen.addColorStop(0.5, 'transparent');
-      oilSheen.addColorStop(0.8, 'rgba(255, 200, 50, 0.6)');
-      oilSheen.addColorStop(1, 'rgba(200, 120, 10, 0.5)');
-      ctx.fillStyle = oilSheen;
-      ctx.fillRect(px - 2, py, pistonW + 4, pistonH * 1.5); // Extends below skirt
-      ctx.restore();
-    }
-
-    // Piston Body (Skirt)
-    const pistonGrad = getChromeGradient(px, py, px + pistonW, py);
-    ctx.fillStyle = pistonGrad;
-    
-    // Draw piston body with rounded bottom corners
-    ctx.beginPath();
-    ctx.moveTo(px, py);
-    ctx.lineTo(px + pistonW, py);
-    ctx.lineTo(px + pistonW, py + pistonH - 10);
-    ctx.quadraticCurveTo(px + pistonW, py + pistonH, px + pistonW - 10, py + pistonH);
-    ctx.lineTo(px + 10, py + pistonH);
-    ctx.quadraticCurveTo(px, py + pistonH, px, py + pistonH - 10);
-    ctx.closePath();
-    ctx.fill();
-
-    // 3D Perspective: Top Ellipse (Piston Crown)
-    // To make it look 3D, we draw the top face as a squashed ellipse
-    const ellipseH = pistonW * 0.15;
-    const topFaceGrad = ctx.createLinearGradient(px, py - ellipseH, px, py + ellipseH);
-    topFaceGrad.addColorStop(0, '#ddd');
-    topFaceGrad.addColorStop(0.5, '#fff'); // Brightest at top edge
-    topFaceGrad.addColorStop(1, '#888');
-    ctx.fillStyle = topFaceGrad;
-    ctx.beginPath();
-    ctx.ellipse(cx, py, pistonW / 2, ellipseH, 0, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Valve reliefs (little dimples on top of piston)
-    ctx.fillStyle = '#555';
-    ctx.beginPath(); ctx.ellipse(cx - pistonW*0.25, py + ellipseH*0.2, pistonW*0.15, ellipseH*0.4, 0, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.ellipse(cx + pistonW*0.25, py - ellipseH*0.2, pistonW*0.15, ellipseH*0.4, 0, 0, Math.PI*2); ctx.fill();
-
-    // Piston Rings (Deep grooves with bright edges)
-    const ringStartY = py + pistonH * 0.15;
-    const ringSpacing = pistonH * 0.08;
-    for (let r = 0; r < 3; r++) {
-      const ry = ringStartY + r * ringSpacing;
-      // Groove shadow (inset)
-      ctx.fillStyle = '#050505';
-      ctx.fillRect(px, ry, pistonW, 6);
-      
-      // Actual ring metal inside groove
-      const ringGrad = getChromeGradient(px, 0, px + pistonW, 0);
-      ctx.fillStyle = oilLevel > 0.3 ? `rgba(255, 200, 50, ${oilLevel})` : ringGrad;
-      ctx.fillRect(px + 2, ry + 1, pistonW - 4, 4);
-      
-      // Highlight on the bottom lip of the groove
-      ctx.fillStyle = 'rgba(255,255,255,0.4)';
-      ctx.fillRect(px, ry + 6, pistonW, 1.5);
-    }
-
-    // Wrist Pin (Gudgeon Pin) Hole
-    const wpY = py + pistonH * 0.6;
-    const wpR = pistonW * 0.18;
-    // Outer bore
-    ctx.fillStyle = '#111';
-    ctx.beginPath(); ctx.arc(cx, wpY, wpR, 0, Math.PI*2); ctx.fill();
-    // Inner bevel shadow
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.arc(cx, wpY, wpR - 2, 0, Math.PI*2); ctx.stroke();
-    
-    // The actual shiny pin inside
-    const wpGrad = ctx.createLinearGradient(cx - wpR, wpY - wpR, cx + wpR, wpY + wpR);
-    wpGrad.addColorStop(0, '#fff'); wpGrad.addColorStop(0.5, '#888'); wpGrad.addColorStop(1, '#222');
-    ctx.fillStyle = wpGrad;
-    ctx.beginPath(); ctx.arc(cx, wpY, wpR - 4, 0, Math.PI*2); ctx.fill();
-
-    // ── E. Heat Spark / Combustion (Dry State) ───────────────
-    // Fire flashes fiercely when piston is near top and oil is low
-    if (heatAlpha > 0.1 && Math.cos(angle) > 0.9) {
-      const sparkIntensity = (Math.cos(angle) - 0.9) * 10 * heatAlpha;
-      ctx.globalCompositeOperation = 'screen';
-      
-      const fireGrad = ctx.createRadialGradient(cx, topWall - 10, 0, cx, topWall - 10, cylW * 0.8);
-      fireGrad.addColorStop(0, `rgba(255, 255, 255, ${sparkIntensity})`);
-      fireGrad.addColorStop(0.2, `rgba(255, 200, 50, ${sparkIntensity * 0.8})`);
-      fireGrad.addColorStop(0.5, `rgba(255, 50, 0, ${sparkIntensity * 0.5})`);
-      fireGrad.addColorStop(1, 'transparent');
-      
-      ctx.fillStyle = fireGrad;
-      ctx.fillRect(cx - cylW, topWall - cylW, cylW * 2, cylW * 2);
-      ctx.globalCompositeOperation = 'source-over';
-    }
-  }
-  ctx.restore(); // jitter restore
-
-  // ── OIL DRIPS (Foreground over engine) ────────────────────
-  if (oilLevel > 0.05 && oilLevel < 0.8) {
-    for (let i = 0; i < N; i++) {
-      const cx = spacing * (i + 1);
-      const dropY = H - H * 0.85 * oilLevel - 30 + Math.sin(time * 0.1 + i * 2) * 15;
-      const dropSize = 8 + Math.sin(time * 0.15 + i) * 4;
-      
-      // Dripping teardrop shape
-      ctx.save();
-      ctx.translate(cx + (i%2==0?-20:20), dropY);
-      
-      const dg = ctx.createRadialGradient(0, 0, 0, 0, 0, dropSize);
-      dg.addColorStop(0,   'rgba(255,255,200,0.9)');
-      dg.addColorStop(0.3, 'rgba(220,160,20,0.9)');
-      dg.addColorStop(1,   'rgba(150,80,0,0)');
-      
-      ctx.fillStyle = dg;
-      ctx.beginPath();
-      ctx.arc(0, 0, dropSize, 0, Math.PI); // Bottom half circle
-      ctx.lineTo(0, -dropSize * 2.5); // Pointy top
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-    }
-  }
-}
-
 
 /* ── Dynamic Meter Updates ────────────────────────────────── */
 const updateMeters = (p, frictionEl, heatEl, protEl) => {
