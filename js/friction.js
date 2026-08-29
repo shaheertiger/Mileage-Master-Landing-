@@ -39,198 +39,223 @@ export const initFrictionScene = async () => {
 
   // ── 1. THREE.JS SETUP ────────────────────────────────────
   const scene = new THREE.Scene();
-  // Deep dark garage background
-  scene.background = new THREE.Color(0x050505);
-  // Add some subtle fog for depth
-  scene.fog = new THREE.Fog(0x050505, 50, 150);
+  scene.background = new THREE.Color(0x0a0a0a);
+  scene.fog = new THREE.FogExp2(0x0a0a0a, 0.015);
 
   const camera = new THREE.PerspectiveCamera(35, sticky.offsetWidth / sticky.offsetHeight, 1, 1000);
-  camera.position.set(0, -5, 90); // Lowered camera to center the engine
-  camera.lookAt(0, -5, 0);
+  camera.position.set(0, 5, 90);
+  camera.lookAt(0, 0, 0);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // Alpha true for background CSS
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
   renderer.setSize(sticky.offsetWidth, sticky.offsetHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.5; // Increased exposure for brighter metal
+  renderer.toneMappingExposure = 1.2;
   
   simContainer.appendChild(renderer.domElement);
 
-  // Resize handler
   window.addEventListener('resize', () => {
     camera.aspect = sticky.offsetWidth / sticky.offsetHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(sticky.offsetWidth, sticky.offsetHeight);
   }, { passive: true });
 
-  // ── 2. LIGHTING (High-Contrast Metallic Studio Setup) ─────
-  const ambient = new THREE.AmbientLight(0xffffff, 0.6); // Brighter ambient
+  // ── 2. CREATE PROCEDURAL ENVIRONMENT MAP FOR METAL ────────
+  // Metal needs an env map to look real. We draw a fake studio setup on a canvas.
+  const envCanvas = document.createElement('canvas');
+  envCanvas.width = 512;
+  envCanvas.height = 256;
+  const eCtx = envCanvas.getContext('2d');
+  
+  // Base dark gradient
+  const grad = eCtx.createLinearGradient(0, 0, 0, 256);
+  grad.addColorStop(0, '#111');
+  grad.addColorStop(0.5, '#444'); // horizon
+  grad.addColorStop(1, '#050505');
+  eCtx.fillStyle = grad;
+  eCtx.fillRect(0, 0, 512, 256);
+  
+  // Draw studio lights (bright white rectangles)
+  eCtx.fillStyle = '#ffffff';
+  eCtx.fillRect(100, 50, 100, 40); // Top left light
+  eCtx.fillRect(350, 60, 80, 30);  // Top right light
+  eCtx.fillStyle = '#ffaa55';
+  eCtx.fillRect(250, 150, 150, 20); // Warm bounce light below horizon
+  
+  const envTexture = new THREE.CanvasTexture(envCanvas);
+  envTexture.mapping = THREE.EquirectangularReflectionMapping;
+  envTexture.encoding = THREE.sRGBEncoding;
+  
+  scene.environment = envTexture; // Apply to scene globally
+
+  // ── 3. LIGHTING ──────────────────────────────────────────
+  const ambient = new THREE.AmbientLight(0xffffff, 0.5);
   scene.add(ambient);
 
-  // Main Key light (Cool/Blueish)
-  const keyLight = new THREE.DirectionalLight(0xe0f2ff, 4.0);
-  keyLight.position.set(30, 40, 50);
-  scene.add(keyLight);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
+  dirLight.position.set(10, 20, 30);
+  scene.add(dirLight);
 
-  // Strong Fill light (Warm)
-  const fillLight = new THREE.DirectionalLight(0xffddaa, 3.0);
-  fillLight.position.set(-40, 10, 40);
-  scene.add(fillLight);
-  
-  // Strong Rim Light (Backlight for edge highlights)
-  const rimLight = new THREE.DirectionalLight(0xffffff, 5.0);
-  rimLight.position.set(0, 50, -50);
-  scene.add(rimLight);
-
-  // Heat glow (Red light from bottom)
-  const heatLight = new THREE.PointLight(0xff3300, 0, 150);
-  heatLight.position.set(0, -20, 20);
+  const heatLight = new THREE.PointLight(0xff2200, 0, 100);
+  heatLight.position.set(0, -10, 10);
   scene.add(heatLight);
 
-  // ── 3. MATERIALS ─────────────────────────────────────────
-  // Without envMaps, MeshPhongMaterial often gives a much sharper, "classic shiny metal" look 
-  // than StandardMaterial. We use high shininess and bright specular colors.
-  
-  const matSteel = new THREE.MeshPhongMaterial({
-    color: 0x888899, // Base grey
-    specular: 0xffffff, // Bright white highlights
-    shininess: 100, // Very sharp reflections
-    reflectivity: 1,
+  // ── 4. MATERIALS ─────────────────────────────────────────
+  const matSteel = new THREE.MeshStandardMaterial({
+    color: 0xcccccc,
+    metalness: 1.0,
+    roughness: 0.15,
+    envMap: envTexture,
+    envMapIntensity: 2.0
   });
 
-  const matDarkMetal = new THREE.MeshPhongMaterial({
+  const matDarkMetal = new THREE.MeshStandardMaterial({
     color: 0x333333,
-    specular: 0xaaaaaa,
-    shininess: 60,
+    metalness: 0.9,
+    roughness: 0.4,
+    envMap: envTexture,
+    envMapIntensity: 1.0
   });
   
-  const matChrome = new THREE.MeshPhongMaterial({
-    color: 0xaaaaaa,
-    specular: 0xffffff,
-    shininess: 150,
+  const matChrome = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    metalness: 1.0,
+    roughness: 0.05,
+    envMap: envTexture,
+    envMapIntensity: 3.0
   });
 
-  // Physically based transparent fluid material for oil
-  const matOil = new THREE.MeshPhysicalMaterial({
-    color: 0xffa600,
-    metalness: 0.2,
-    roughness: 0.1,
-    transmission: 0.9, // glass-like fluid
-    transparent: true,
-    opacity: 0.9,
-    ior: 1.4,
-    thickness: 10.0,
-  });
-
-  // ── 4. BUILD ENGINE ──────────────────────────────────────
+  // ── 5. BUILD ENGINE GEOMETRY ─────────────────────────────
   const engineGroup = new THREE.Group();
-  // Move the entire engine up so it sits perfectly in the center of the screen
-  engineGroup.position.y = 12; 
+  engineGroup.position.y = 8; 
   scene.add(engineGroup);
 
-  // Engine dimensions
   const N = 4;
   const crankR = 6;
   const rodLen = 22;
-  const spacing = 14;
-  const pistonR = 5.5;
+  const spacing = 15;
+  const pistonR = 6.0;
   const pistonH = 10;
-  const fireOffsets = [0, Math.PI, Math.PI * 1.5, Math.PI * 0.5]; // 1-3-4-2
+  const fireOffsets = [0, Math.PI, Math.PI * 1.5, Math.PI * 0.5];
 
-  // Center engine
   const startX = -((N - 1) * spacing) / 2;
-
   const pistons = [];
   const rods = [];
   const throws = [];
 
-  // Geometries
   const geoPiston = new THREE.CylinderGeometry(pistonR, pistonR, pistonH, 32);
-  const geoPin = new THREE.CylinderGeometry(1.5, 1.5, pistonR * 2.2, 16);
+  const geoPin = new THREE.CylinderGeometry(1.5, 1.5, pistonR * 2.1, 16);
   geoPin.rotateZ(Math.PI / 2);
   
-  const geoRod = new THREE.BoxGeometry(pistonR * 0.8, rodLen, pistonR * 0.6);
   const geoCrankMain = new THREE.CylinderGeometry(2, 2, spacing * (N + 1), 16);
   geoCrankMain.rotateZ(Math.PI / 2);
   
-  const geoCounterweight = new THREE.BoxGeometry(3, crankR * 2.5, pistonR * 1.5);
-  const geoCrankPin = new THREE.CylinderGeometry(1.8, 1.8, pistonR * 1.2, 16);
+  // Crank counterweight shape (squashed cylinder)
+  const geoCounterweight = new THREE.CylinderGeometry(4.5, 4.5, 2, 16);
+  geoCounterweight.scale(1, 1, 1.5); // elongate
+  geoCounterweight.rotateZ(Math.PI / 2);
+  
+  const geoCrankPin = new THREE.CylinderGeometry(1.8, 1.8, spacing * 0.4, 16);
   geoCrankPin.rotateZ(Math.PI / 2);
 
-  // Main Crankshaft Axis
   const mainCrank = new THREE.Mesh(geoCrankMain, matDarkMetal);
-  mainCrank.position.y = -rodLen - crankR + 10; // Base offset
+  mainCrank.position.y = -rodLen - crankR + 5;
   engineGroup.add(mainCrank);
 
   for (let i = 0; i < N; i++) {
     const cx = startX + i * spacing;
 
-    // ── Piston ──
+    // Piston
     const pGroup = new THREE.Group();
     pGroup.position.x = cx;
-    
     const pistonMesh = new THREE.Mesh(geoPiston, matSteel);
     pGroup.add(pistonMesh);
     
-    // Piston Rings (Visual details)
+    // Rings
     for(let r=0; r<3; r++){
-      const ring = new THREE.Mesh(
-        new THREE.CylinderGeometry(pistonR + 0.1, pistonR + 0.1, 0.4, 32),
-        matChrome
-      );
-      ring.position.y = pistonH/2 - 2 - (r * 1.2);
+      const ring = new THREE.Mesh(new THREE.CylinderGeometry(pistonR + 0.15, pistonR + 0.15, 0.4, 32), matChrome);
+      ring.position.y = pistonH/2 - 2 - (r * 1.5);
       pGroup.add(ring);
     }
-
-    // Wrist Pin
     const pinMesh = new THREE.Mesh(geoPin, matChrome);
     pinMesh.position.y = -pistonH * 0.2;
     pGroup.add(pinMesh);
-
     engineGroup.add(pGroup);
     pistons.push(pGroup);
 
-    // ── Connecting Rod ──
+    // Connecting Rod (I-Beam style)
     const rGroup = new THREE.Group();
     rGroup.position.x = cx;
     
-    // We pivot the rod from the top (wrist pin)
-    const rodMesh = new THREE.Mesh(geoRod, matDarkMetal);
-    rodMesh.position.y = -rodLen / 2;
-    rGroup.add(rodMesh);
+    const rodBody = new THREE.Mesh(new THREE.BoxGeometry(2, rodLen, 3), matSteel);
+    rodBody.position.y = -rodLen / 2;
+    rGroup.add(rodBody);
+    
+    // Flanges to make it an I-Beam
+    const flange1 = new THREE.Mesh(new THREE.BoxGeometry(3, rodLen, 0.5), matSteel);
+    flange1.position.set(0, -rodLen / 2, 1.5);
+    rGroup.add(flange1);
+    const flange2 = new THREE.Mesh(new THREE.BoxGeometry(3, rodLen, 0.5), matSteel);
+    flange2.position.set(0, -rodLen / 2, -1.5);
+    rGroup.add(flange2);
     
     engineGroup.add(rGroup);
     rods.push(rGroup);
 
-    // ── Crankshaft Throw ──
+    // Crank Throw
     const tGroup = new THREE.Group();
     tGroup.position.x = cx;
     tGroup.position.y = mainCrank.position.y;
     
     const cw1 = new THREE.Mesh(geoCounterweight, matDarkMetal);
-    cw1.position.set(-pistonR*0.7, -crankR*0.5, 0);
+    cw1.position.set(-2, -crankR*0.3, 0);
     const cw2 = new THREE.Mesh(geoCounterweight, matDarkMetal);
-    cw2.position.set(pistonR*0.7, -crankR*0.5, 0);
-    
+    cw2.position.set(2, -crankR*0.3, 0);
     const cPin = new THREE.Mesh(geoCrankPin, matChrome);
     cPin.position.y = crankR;
 
     tGroup.add(cw1);
     tGroup.add(cw2);
     tGroup.add(cPin);
-    
     engineGroup.add(tGroup);
     throws.push(tGroup);
   }
 
-  // ── 5. OIL FLUID MESH ────────────────────────────────────
-  const oilGeo = new THREE.BoxGeometry(spacing * N + 20, rodLen * 2.5, 40);
-  const oilMesh = new THREE.Mesh(oilGeo, matOil);
-  oilMesh.position.y = -100; // start hidden below
-  scene.add(oilMesh);
+  // ── 6. DYNAMIC FLUID (Wavy Plane) ─────────────────────────
+  // We use a high-segment plane to modify vertices for fluid waves
+  const fluidW = sticky.offsetWidth * 1.5;
+  const fluidD = 100;
+  const oilGeo = new THREE.PlaneGeometry(fluidW, fluidD, 64, 16);
+  oilGeo.rotateX(-Math.PI / 2); // Lay flat
+  
+  const matOil = new THREE.MeshPhysicalMaterial({
+    color: 0xffa600,
+    metalness: 0.1,
+    roughness: 0.1,
+    transmission: 0.8, // glass-like
+    transparent: true,
+    opacity: 0.9,
+    ior: 1.4,
+    side: THREE.DoubleSide
+  });
 
-  // ── 6. SCROLL TRIGGER LOGIC ──────────────────────────────
+  const oilMesh = new THREE.Mesh(oilGeo, matOil);
+  oilMesh.position.y = -100;
+  scene.add(oilMesh);
+  
+  // Sub-surface oil body (box below the plane so it looks deep)
+  const oilBodyGeo = new THREE.BoxGeometry(fluidW, 100, fluidD);
+  const matOilBody = new THREE.MeshBasicMaterial({
+    color: 0x995500,
+    transparent: true,
+    opacity: 0.6
+  });
+  const oilBodyMesh = new THREE.Mesh(oilBodyGeo, matOilBody);
+  oilMesh.add(oilBodyMesh);
+  oilBodyMesh.position.y = -50; // offset down from surface
+
+  // ── 7. SCROLL TRIGGER LOGIC ──────────────────────────────
   ScrollTrigger.create({
     trigger: section,
     pin: sticky,
@@ -240,102 +265,91 @@ export const initFrictionScene = async () => {
     onUpdate(self) {
       const p = self.progress;
       state.progress = p;
-
       if (p < 0.25) {
         state.oilLevel = 0;
-        state.speed    = 0.05; // Slow, struggling
+        state.speed = 0.05;
         state.heatAlpha = 1.0;
-        state.jitter = 0.5;
+        state.jitter = 0.8;
       } else if (p < 0.55) {
         const sub = (p - 0.25) / 0.30;
-        state.oilLevel  = sub;
-        state.speed     = 0.05 + sub * 0.15;
+        state.oilLevel = sub;
+        state.speed = 0.05 + sub * 0.25;
         state.heatAlpha = 1 - sub;
-        state.jitter = 0.5 * (1 - sub);
+        state.jitter = 0.8 * (1 - sub);
       } else {
-        state.oilLevel  = 1;
-        state.speed     = 0.3; // Fast, smooth
+        state.oilLevel = 1;
+        state.speed = 0.35;
         state.heatAlpha = 0;
         state.jitter = 0;
       }
-
       updateMeters(p, meterFriction, meterHeat, meterProtection);
     }
   });
 
   if (textGroup) gsap.fromTo(textGroup, { opacity: 0 }, { opacity: 1, duration: 0.5 });
 
-  // ── 7. ANIMATION LOOP ────────────────────────────────────
+  // ── 8. ANIMATION LOOP ────────────────────────────────────
   let rafId;
   const clock = new THREE.Clock();
+
+  // Save original vertices for wave calculation
+  const posAttribute = oilGeo.attributes.position;
+  const v0 = new Float32Array(posAttribute.array.length);
+  for(let i=0; i<posAttribute.array.length; i++) v0[i] = posAttribute.array[i];
 
   const render = () => {
     rafId = requestAnimationFrame(render);
     const time = clock.getElapsedTime();
 
-    // Advance engine phase
     state.crankAngle += state.speed;
 
-    // Apply Engine Kinematics
     for (let i = 0; i < N; i++) {
       const angle = state.crankAngle + fireOffsets[i];
-      
-      // 1. Rotate Crank Throw
       throws[i].rotation.z = angle;
-
-      // Crank pin world position Y relative to main crank axis
-      const crankPinYLocal = crankR * Math.cos(angle);
-      const crankPinXLocal = -crankR * Math.sin(angle); // negative because rotation Z is CCW
-
-      // 2. Calculate Piston Position (Slider-Crank geometry)
       const ratio = crankR / rodLen;
-      // Formula: Y = R*cos(A) + L*sqrt(1 - (R/L*sin(A))^2)
       const pistonOffset = crankR * Math.cos(angle) + rodLen * Math.sqrt(1 - Math.pow(ratio * Math.sin(angle), 2));
-      
       const pY = mainCrank.position.y + pistonOffset;
       
-      // Apply jitter if dry
       const jY = (Math.random() - 0.5) * state.jitter;
       pistons[i].position.y = pY + jY;
 
-      // 3. Connect Rod
       const wristPinY = pY - pistonH * 0.2;
       rods[i].position.y = wristPinY;
-      
-      // Rod angle: asin((R * sin(A)) / L)
-      const rodAngle = Math.asin((crankR * Math.sin(angle)) / rodLen);
-      rods[i].rotation.z = rodAngle;
+      rods[i].rotation.z = Math.asin((crankR * Math.sin(angle)) / rodLen);
     }
 
-    // Animate Oil
     if (state.oilLevel > 0) {
-      // Base Y is bottom of engine
-      const bottomY = mainCrank.position.y - crankR - 10;
-      const topY = 20; // Top of stroke approx
+      const bottomY = mainCrank.position.y - crankR - 15;
+      const topY = 15; 
       const range = topY - bottomY;
+      oilMesh.position.y = bottomY + (range * state.oilLevel);
       
-      oilMesh.position.y = bottomY + (range * state.oilLevel) - (oilGeo.parameters.height / 2);
-      
-      // Animate oil material a bit
-      matOil.opacity = 0.7 + (state.oilLevel * 0.3);
-      
-      // Tint engine metal slightly golden when submerged
-      matSteel.color.setHex(0xdddddd).lerp(new THREE.Color(0xffeeba), state.oilLevel * 0.4);
+      // Animate Waves
+      const v = posAttribute.array;
+      for (let i = 0; i < v.length; i += 3) {
+        const x = v0[i];
+        const z = v0[i+2];
+        // Complex wave function
+        const wave = Math.sin(x * 0.05 + time * 3) * 1.5 + Math.cos(z * 0.05 - time * 2) * 1.5;
+        v[i+1] = v0[i+1] + wave * state.oilLevel;
+      }
+      posAttribute.needsUpdate = true;
+      oilGeo.computeVertexNormals(); // Crucial for lighting to reflect off waves
+
+      matSteel.color.setHex(0xcccccc).lerp(new THREE.Color(0xffeeba), state.oilLevel * 0.3);
     } else {
-      oilMesh.position.y = -100;
-      matSteel.color.setHex(0xdddddd);
+      oilMesh.position.y = -200;
+      matSteel.color.setHex(0xcccccc);
     }
 
-    // Heat Light
-    heatLight.intensity = state.heatAlpha * 5;
+    heatLight.intensity = state.heatAlpha * 3;
     
-    // Slight camera shake when dry
     if (state.jitter > 0) {
       camera.position.x = (Math.random() - 0.5) * state.jitter * 0.5;
-      camera.position.y = 15 + (Math.random() - 0.5) * state.jitter * 0.5;
+      camera.position.y = 5 + (Math.random() - 0.5) * state.jitter * 0.5;
     } else {
       camera.position.x = 0;
-      camera.position.y = 15;
+      camera.position.y = 5;
     }
 
     renderer.render(scene, camera);
