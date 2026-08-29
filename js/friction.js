@@ -45,15 +45,15 @@ export const initFrictionScene = async () => {
   scene.fog = new THREE.Fog(0x050505, 50, 150);
 
   const camera = new THREE.PerspectiveCamera(35, sticky.offsetWidth / sticky.offsetHeight, 1, 1000);
-  camera.position.set(0, 15, 90); // Look slightly down at the engine
+  camera.position.set(0, -5, 90); // Lowered camera to center the engine
+  camera.lookAt(0, -5, 0);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // Alpha true for background CSS
   renderer.setSize(sticky.offsetWidth, sticky.offsetHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  // High quality rendering
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.2;
+  renderer.toneMappingExposure = 1.5; // Increased exposure for brighter metal
   
   simContainer.appendChild(renderer.domElement);
 
@@ -64,64 +64,69 @@ export const initFrictionScene = async () => {
     renderer.setSize(sticky.offsetWidth, sticky.offsetHeight);
   }, { passive: true });
 
-  // ── 2. LIGHTING (Cinematic Studio Setup) ──────────────────
-  const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+  // ── 2. LIGHTING (High-Contrast Metallic Studio Setup) ─────
+  const ambient = new THREE.AmbientLight(0xffffff, 0.6); // Brighter ambient
   scene.add(ambient);
 
-  // Key light (cool white)
-  const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
-  keyLight.position.set(20, 50, 30);
+  // Main Key light (Cool/Blueish)
+  const keyLight = new THREE.DirectionalLight(0xe0f2ff, 4.0);
+  keyLight.position.set(30, 40, 50);
   scene.add(keyLight);
 
-  // Fill light (warm rim light)
-  const fillLight = new THREE.DirectionalLight(0xffaa55, 1.5);
-  fillLight.position.set(-30, -10, -30);
+  // Strong Fill light (Warm)
+  const fillLight = new THREE.DirectionalLight(0xffddaa, 3.0);
+  fillLight.position.set(-40, 10, 40);
   scene.add(fillLight);
   
-  // Overhead reflection light
-  const topLight = new THREE.PointLight(0xffffff, 1, 100);
-  topLight.position.set(0, 40, 0);
-  scene.add(topLight);
+  // Strong Rim Light (Backlight for edge highlights)
+  const rimLight = new THREE.DirectionalLight(0xffffff, 5.0);
+  rimLight.position.set(0, 50, -50);
+  scene.add(rimLight);
 
   // Heat glow (Red light from bottom)
-  const heatLight = new THREE.PointLight(0xff2200, 0, 100);
-  heatLight.position.set(0, -10, 10);
+  const heatLight = new THREE.PointLight(0xff3300, 0, 150);
+  heatLight.position.set(0, -20, 20);
   scene.add(heatLight);
 
   // ── 3. MATERIALS ─────────────────────────────────────────
-  const matSteel = new THREE.MeshStandardMaterial({
-    color: 0xdddddd,
-    metalness: 0.9,
-    roughness: 0.2,
-    envMapIntensity: 1.0
+  // Without envMaps, MeshPhongMaterial often gives a much sharper, "classic shiny metal" look 
+  // than StandardMaterial. We use high shininess and bright specular colors.
+  
+  const matSteel = new THREE.MeshPhongMaterial({
+    color: 0x888899, // Base grey
+    specular: 0xffffff, // Bright white highlights
+    shininess: 100, // Very sharp reflections
+    reflectivity: 1,
   });
 
-  const matDarkMetal = new THREE.MeshStandardMaterial({
-    color: 0x444444,
-    metalness: 0.8,
-    roughness: 0.4,
+  const matDarkMetal = new THREE.MeshPhongMaterial({
+    color: 0x333333,
+    specular: 0xaaaaaa,
+    shininess: 60,
   });
   
-  const matChrome = new THREE.MeshStandardMaterial({
-    color: 0xffffff,
-    metalness: 1.0,
-    roughness: 0.1,
+  const matChrome = new THREE.MeshPhongMaterial({
+    color: 0xaaaaaa,
+    specular: 0xffffff,
+    shininess: 150,
   });
 
   // Physically based transparent fluid material for oil
   const matOil = new THREE.MeshPhysicalMaterial({
-    color: 0xffaa00,
-    metalness: 0.1,
-    roughness: 0.0,
-    transmission: 0.9, // glass-like
+    color: 0xffa600,
+    metalness: 0.2,
+    roughness: 0.1,
+    transmission: 0.9, // glass-like fluid
     transparent: true,
-    opacity: 1.0,
-    ior: 1.5,
-    thickness: 5.0,
+    opacity: 0.9,
+    ior: 1.4,
+    thickness: 10.0,
   });
 
   // ── 4. BUILD ENGINE ──────────────────────────────────────
   const engineGroup = new THREE.Group();
+  // Move the entire engine up so it sits perfectly in the center of the screen
+  engineGroup.position.y = 12; 
   scene.add(engineGroup);
 
   // Engine dimensions
