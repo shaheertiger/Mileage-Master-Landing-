@@ -942,3 +942,26 @@ button {
 [data-tier="minimal"] .t-micro {
   display: none;
 }
+
+/* -- GLOBAL LOGO ---------------------------------------------- */
+.global-logo {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  display: flex;
+  flex-direction: column;
+  z-index: 9999;
+  font-family: var(--display-family, 'Bebas Neue', sans-serif);
+  font-size: 1.8rem;
+  line-height: 0.9;
+  letter-spacing: 0.05em;
+  font-weight: bold;
+  pointer-events: none;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+.gl-top {
+  color: var(--brand-red);
+}
+.gl-bottom {
+  color: var(--white-100);
+}

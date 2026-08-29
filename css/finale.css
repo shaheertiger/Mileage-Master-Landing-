@@ -159,11 +159,22 @@
   gap: var(--sp-6);
 }
 
-.fm-logo {
-  height: 24px;
-  width: auto;
-  filter: grayscale(100%) brightness(150%);
-  opacity: 0.8;
+.coded-logo {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  font-family: var(--display-family, 'Bebas Neue', sans-serif);
+  font-size: 1.8rem;
+  letter-spacing: 0.05em;
+  font-weight: bold;
+}
+
+.coded-logo-top {
+  color: var(--brand-red);
+}
+
+.coded-logo-bottom {
+  color: var(--white-100);
 }
 
 .fm-nav, .fm-social, .fm-legal {
