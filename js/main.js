@@ -11,6 +11,7 @@ import { initFrictionScene }              from './friction.js';
 import { initComparisonScene }            from './comparison.js';
 import { initFinderScene }                from './finder.js';
 import { initLaboratoryScene }            from './products.js';
+import { initNav }                        from './nav.js';
 import { initTweakner }                   from './tweakner.js';
 
 /*
@@ -43,8 +44,8 @@ const init = async () => {
     }
   }
 
-  // ── 2. Navigation ─────────────────────────────────────────
-  // initNav();
+  // ── 2. Navigation setup ───────────────────────────────────
+  initNav();
 
   // ── 3. Hero scene setup ───────────────────────────────────
   // Runs setup, waits for LOADER_COMPLETE to animate entrance

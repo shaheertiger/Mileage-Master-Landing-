@@ -69,11 +69,34 @@
      MAIN APPLICATION
      ═══════════════════════════════════════════════════════════ -->
   <div id="app">
-    <!-- Global Logo -->
-    <div class="global-logo" aria-label="Mileage Master Logo">
-      <span class="gl-top">MILEAGE</span>
-      <span class="gl-bottom">MASTER</span>
-    </div>
+
+    <!-- ─────────────────────────────────────────────────────────
+       GLOBAL NAVIGATION
+       ───────────────────────────────────────────────────────── -->
+    <nav id="nav" role="navigation" aria-label="Main navigation">
+      <div class="nav__inner">
+        <!-- Logo -->
+        <a href="#hero" class="nav__logo" aria-label="Mileage Master Home" style="text-decoration: none;">
+          <div class="coded-logo" style="font-size: 1.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+            <span class="coded-logo-top">MILEAGE</span>
+            <span class="coded-logo-bottom">MASTER</span>
+          </div>
+        </a>
+
+        <!-- Desktop Links -->
+        <div class="nav__links">
+          <a href="#hero" class="nav__link is-active" data-target="hero">HOME</a>
+          <a href="#laboratory" class="nav__link" data-target="products">PRODUCTS</a>
+          <a href="#friction" class="nav__link" data-target="friction">TECHNOLOGY</a>
+          <a href="#finder" class="nav__link" data-target="finder">FINDER</a>
+        </div>
+
+        <!-- Mobile Hamburger -->
+        <button id="nav-hamburger" class="nav__hamburger" aria-label="Open menu" aria-expanded="false" style="background:transparent; border:none; color:white; font-family:var(--nav-family); letter-spacing:0.1em; cursor:pointer; font-weight:bold;">
+          MENU
+        </button>
+      </div>
+    </nav>
 
     <!-- Global scan lines — extremely subtle ambient texture -->
     <div class="global-scanlines" aria-hidden="true"></div>
