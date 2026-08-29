@@ -177,8 +177,8 @@
         <!-- Center: Massive Bottle Render -->
         <div class="lab-center">
           <div class="lab-bottle-wrapper">
-            <!-- GSAP will manipulate this source based on view selection -->
-            <img src="assets/images/product-3.jpg" alt="Mileage Master Product" id="lab-bottle-render" />
+            <!-- Static image with background removed -->
+            <img src="assets/images/product-3-alpha.png" alt="Mileage Master Product" id="lab-bottle-render" style="max-width: 100%; height: auto;" />
           </div>
           <div class="lab-product-name">
             <h2 id="lab-name-text">MILEAGE MASTER</h2>
@@ -390,6 +390,201 @@
                 <span class="t-body f-spec-val" id="f-prod-id">[SPECIFICATION TO BE PROVIDED]</span>
               </div>
               <div class="f-spec-item">
+              <span class="t-label">APPLICATION</span>
+              <span class="t-value" id="lab-val-application">SPECIFICATION TO BE PROVIDED</span>
+            </div>
+
+            <div class="telemetry-item">
+              <span class="t-label">SPECIFICATION</span>
+              <span class="t-value" id="lab-val-spec">SPECIFICATION TO BE PROVIDED</span>
+            </div>
+
+            <div class="telemetry-item">
+              <span class="t-label">ENGINE TYPE</span>
+              <span class="t-value" id="lab-val-engine">SPECIFICATION TO BE PROVIDED</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ─────────────────────────────────────────────────────────
+       SUBSEQUENT SECTIONS — Awaiting build commands
+       ───────────────────────────────────────────────────────── -->
+
+    <!-- ─────────────────────────────────────────────────────────
+       FRICTION — MACRO SIMULATION SEQUENCE
+       ───────────────────────────────────────────────────────── -->
+    <section id="friction" aria-label="Friction and Protection">
+      <div class="friction-sticky">
+
+        <!-- Piston Engine Canvas Simulation -->
+        <div class="friction-sim">
+          <canvas id="piston-canvas" aria-hidden="true"></canvas>
+        </div>
+
+
+        <!-- UI Overlays -->
+        <div class="friction-ui">
+
+          <!-- Telemetry Meters -->
+          <div class="friction-meters" aria-hidden="true">
+
+            <div class="meter-group meter-friction">
+              <span class="meter-label">FRICTION</span>
+              <div class="meter-track">
+                <div class="meter-fill" style="transform: scaleY(1); background: var(--brand-red);"></div>
+              </div>
+              <span class="meter-value">HIGH</span>
+            </div>
+
+            <div class="meter-group meter-heat">
+              <span class="meter-label">HEAT</span>
+              <div class="meter-track">
+                <div class="meter-fill" style="transform: scaleY(1); background: var(--brand-red);"></div>
+              </div>
+              <span class="meter-value">CRITICAL</span>
+            </div>
+
+            <div class="meter-group meter-protection">
+              <span class="meter-label">PROTECTION</span>
+              <div class="meter-track">
+                <div class="meter-fill" style="transform: scaleY(0); background: var(--oil-500);"></div>
+              </div>
+              <span class="meter-value">0%</span>
+            </div>
+
+          </div>
+
+          <!-- Cinematic Copy -->
+          <div class="friction-text">
+            <h2 class="t-display">
+              ENGINEERED<br>
+              BETWEEN<br>
+              <span class="red">EVERY MOVING PART.</span>
+            </h2>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+
+    <!-- ─────────────────────────────────────────────────────────
+       COMPARISON SEQUENCE
+       ───────────────────────────────────────────────────────── -->
+    <section id="comparison" aria-label="Engine Comparison">
+      <div class="comp-header">
+        <h2 class="t-display">
+          WHAT HAPPENS<br>
+          BETWEEN THE <span class="red">REVOLUTIONS?</span>
+        </h2>
+      </div>
+
+      <div class="comp-container" id="comp-slider">
+
+        <!-- Base Layer: Friction (Left State) -->
+        <div class="comp-layer comp-base">
+          <div class="comp-texture dry-metal"></div>
+          <div class="comp-label label-left">
+            <span class="c-title">FRICTION</span>
+            <span class="c-sub">HEAT</span>
+            <span class="c-sub">WEAR</span>
+          </div>
+        </div>
+
+        <!-- Overlay Layer: Lubrication (Right State) -->
+        <!-- CSS clip-path dynamically reveals this layer -->
+        <div class="comp-layer comp-overlay" id="comp-overlay">
+          <div class="comp-texture smooth-oil"></div>
+          <div class="comp-label label-right">
+            <span class="c-title">LUBRICATION</span>
+            <span class="c-sub">PROTECTION</span>
+            <span class="c-sub">CONTROL</span>
+          </div>
+        </div>
+
+        <!-- The Draggable Handle -->
+        <div class="comp-handle" id="comp-handle">
+          <div class="comp-line"></div>
+          <div class="comp-knob">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ─────────────────────────────────────────────────────────
+       FIND YOUR OIL (CONFIGURATOR)
+       ───────────────────────────────────────────────────────── -->
+    <section id="finder" aria-label="Find Your Oil">
+      <div class="finder-container">
+        <div class="finder-header">
+          <h2 class="t-display">
+            FIND THE<br>
+            <span class="red">RIGHT MATCH.</span>
+          </h2>
+        </div>
+
+        <!-- Step 1: Vehicle Type -->
+        <div class="f-step active" id="f-step-1">
+          <h3 class="f-question t-tech">WHAT DO YOU DRIVE?</h3>
+          <div class="f-grid">
+            <button class="f-btn" data-val="CAR">CAR</button>
+            <button class="f-btn" data-val="SUV">SUV</button>
+            <button class="f-btn" data-val="TRUCK">TRUCK</button>
+            <button class="f-btn" data-val="MOTORCYCLE">MOTORCYCLE</button>
+            <button class="f-btn" data-val="COMMERCIAL">COMMERCIAL VEHICLE</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Engine Type -->
+        <div class="f-step" id="f-step-2">
+          <h3 class="f-question t-tech">ENGINE TYPE</h3>
+          <div class="f-grid">
+            <button class="f-btn" data-val="GASOLINE">GASOLINE</button>
+            <button class="f-btn" data-val="DIESEL">DIESEL</button>
+            <button class="f-btn" data-val="HYBRID">HYBRID / EV</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Use Case -->
+        <div class="f-step" id="f-step-3">
+          <h3 class="f-question t-tech">USE CASE</h3>
+          <div class="f-grid">
+            <button class="f-btn" data-val="CITY">CITY</button>
+            <button class="f-btn" data-val="HIGHWAY">HIGHWAY</button>
+            <button class="f-btn" data-val="PERFORMANCE">PERFORMANCE</button>
+            <button class="f-btn" data-val="HEAVY DUTY">HEAVY DUTY</button>
+          </div>
+        </div>
+
+        <!-- Result State -->
+        <div class="f-step f-result" id="f-result">
+          <div class="f-result-content">
+            <h3 class="t-display">RECOMMENDED<br><span class="red">FORMULA</span></h3>
+            <p class="t-tech f-match-summary" id="f-summary">CAR / GASOLINE / CITY</p>
+
+            <div class="f-specs">
+              <div class="f-spec-item">
+                <span class="t-micro">PRODUCT ID</span>
+                <span class="t-body f-spec-val" id="f-prod-id">[SPECIFICATION TO BE PROVIDED]</span>
+              </div>
+              <div class="f-spec-item">
                 <span class="t-micro">VISCOSITY</span>
                 <span class="t-body f-spec-val">[SPECIFICATION TO BE PROVIDED]</span>
               </div>
@@ -403,16 +598,13 @@
           </div>
 
           <div class="f-result-visual">
-            <!-- Note: we use our existing product image placeholder -->
-            <img src="assets/images/product-1.png" alt="Recommended Product" class="f-bottle-img" />
+            <img src="assets/images/product-3-alpha.png" alt="Recommended Product" class="f-bottle-img" />
             <div class="f-glow"></div>
           </div>
         </div>
 
       </div>
     </section>
-
-
 
     <!-- ─────────────────────────────────────────────────────────
        FOOTER
