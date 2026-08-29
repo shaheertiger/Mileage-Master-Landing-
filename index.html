@@ -149,54 +149,9 @@
     <section id="friction" aria-label="Friction and Protection">
       <div class="friction-sticky">
 
-        <!-- Two Circular Engine Journal Discs with fluid between them -->
+        <!-- Piston Engine Canvas Simulation -->
         <div class="friction-sim">
-
-          <!-- TOP Circular Engine Disc -->
-          <div class="engine-disc disc-top" aria-hidden="true">
-            <div class="disc-face">
-              <div class="disc-ring ring-1"></div>
-              <div class="disc-ring ring-2"></div>
-              <div class="disc-ring ring-3"></div>
-              <div class="disc-bolt bolt-1"></div>
-              <div class="disc-bolt bolt-2"></div>
-              <div class="disc-bolt bolt-3"></div>
-              <div class="disc-bolt bolt-4"></div>
-              <div class="disc-bolt bolt-5"></div>
-              <div class="disc-bolt bolt-6"></div>
-              <div class="disc-center"></div>
-            </div>
-          </div>
-
-          <!-- CONTACT ZONE — Oil fluid flows here -->
-          <div class="contact-zone" id="contact-zone">
-            <div class="heat-glow" aria-hidden="true"></div>
-            <div class="oil-layer" aria-hidden="true">
-              <svg class="oil-wave-svg" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-                <path class="wave w1" d="M0,40 C150,10 300,70 450,40 C600,10 750,70 900,40 C1050,10 1200,70 1350,40 L1350,80 L0,80 Z"/>
-                <path class="wave w2" d="M0,45 C200,15 400,65 600,45 C800,15 1000,65 1200,45 L1200,80 L0,80 Z"/>
-                <path class="wave w3" d="M0,50 C100,30 250,60 400,50 C550,30 700,60 850,50 C1000,30 1150,60 1200,50 L1200,80 L0,80 Z"/>
-                <path class="wave w4" d="M0,38 C120,32 240,44 360,38 C480,32 600,44 720,38 C840,32 960,44 1200,38" fill="none" stroke="rgba(255,240,180,0.5)" stroke-width="2"/>
-              </svg>
-            </div>
-          </div>
-
-          <!-- BOTTOM Circular Engine Disc -->
-          <div class="engine-disc disc-bottom" aria-hidden="true">
-            <div class="disc-face">
-              <div class="disc-ring ring-1"></div>
-              <div class="disc-ring ring-2"></div>
-              <div class="disc-ring ring-3"></div>
-              <div class="disc-bolt bolt-1"></div>
-              <div class="disc-bolt bolt-2"></div>
-              <div class="disc-bolt bolt-3"></div>
-              <div class="disc-bolt bolt-4"></div>
-              <div class="disc-bolt bolt-5"></div>
-              <div class="disc-bolt bolt-6"></div>
-              <div class="disc-center"></div>
-            </div>
-          </div>
-
+          <canvas id="piston-canvas" aria-hidden="true"></canvas>
         </div>
 
 
