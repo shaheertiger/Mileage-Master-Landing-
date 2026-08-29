@@ -1,12 +1,12 @@
 /* ============================================================
-   MILEAGE MASTER — PISTON ENGINE SIMULATION
-   Canvas-based inline 4-cylinder | friction.css
+   MILEAGE MASTER — FRICTION IMAGE SEQUENCE
+   friction.css
    ============================================================ */
 
 #friction {
   position: relative;
   height: 500vh;
-  background: #050505;
+  background: #000; /* Dark background for video */
 }
 
 .friction-sticky {
@@ -15,7 +15,7 @@
   height: 100vh;
   width: 100%;
   overflow: hidden;
-  background: #070707;
+  background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,6 +32,7 @@
 #piston-canvas {
   width: 100%;
   height: 100%;
+  object-fit: cover;
   display: block;
 }
 
@@ -44,6 +45,8 @@
   display: flex;
   justify-content: space-between;
   padding: var(--sp-12) var(--section-px);
+  /* Optional: subtle gradient to ensure text readability over the video */
+  background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.8) 100%);
 }
 
 .friction-meters {
@@ -115,6 +118,7 @@
     flex-direction: column;
     justify-content: flex-end;
     padding-bottom: var(--sp-24);
+    background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 40%);
   }
   .friction-meters {
     flex-direction: row;
