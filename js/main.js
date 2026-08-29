@@ -50,9 +50,6 @@ const init = async () => {
   // Runs setup, waits for LOADER_COMPLETE to animate entrance
   await initHero();
 
-  // ── 4. Laboratory sequence setup ──────────────────────────
-  initLaboratoryScene();
-
   // ── 5. Friction sequence setup ────────────────────────────
   await initFrictionScene();
 
