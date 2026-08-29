@@ -1,12 +1,12 @@
 /* ============================================================
    MILEAGE MASTER — FRICTION MACRO SIMULATION
-   Friction and Protection interaction | friction.css
+   Two circular engine discs + fluid oil waves | friction.css
    ============================================================ */
 
 #friction {
   position: relative;
   height: 500vh;
-  background: var(--bg-void);
+  background: #050505;
 }
 
 .friction-sticky {
@@ -15,13 +15,13 @@
   height: 100vh;
   width: 100%;
   overflow: hidden;
-  background: #0a0a0a;
+  background: radial-gradient(ellipse at center, #111 0%, #050505 100%);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* ── MACRO SIMULATION ─────────────────────────────────────── */
+/* ── SIMULATION SCENE ─────────────────────────────────────── */
 .friction-sim {
   position: absolute;
   inset: 0;
@@ -29,250 +29,210 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 0;
   pointer-events: none;
 }
 
-/* ── METAL SLABS — Realistic machined engine metal ────────── */
-.metal-slab {
-  position: absolute;
-  width: 120vw;
-  height: 46vh;
+/* ── CIRCULAR ENGINE DISCS ────────────────────────────────── */
+.engine-disc {
+  width: min(92vw, 1100px);
+  height: 220px;
+  position: relative;
   will-change: transform;
   overflow: hidden;
+  /* Show only the bottom half for top disc, top half for bottom disc */
+  border-radius: 0;
 }
 
-/* Brushed metal base — multiple overlapping gradients for realism */
-.metal-top {
-  top: 0;
-  /* Machined steel: dark at edges, bright highlight across middle */
+/* The actual circular face — clips to an ellipse/disc shape */
+.disc-face {
+  position: absolute;
+  width: 110%;
+  left: -5%;
+  /* This gives the disc a pronounced 3D ellipse look */
+  height: 500px;
+  border-radius: 50%;
+  overflow: hidden;
+  /* Brushed steel gradient */
   background:
-    linear-gradient(180deg,
-      #111 0%,
-      #1c1c1c 15%,
-      #2e2e2e 30%,
-      #3a3a3a 45%,
-      #292929 60%,
-      #1e1e1e 80%,
-      #141414 100%
+    /* Radial center highlight */
+    radial-gradient(ellipse 60% 50% at 50% 50%,
+      #4a4a4a 0%,
+      #333 30%,
+      #222 60%,
+      #181818 100%
     );
-  /* Bottom edge is the contact surface — slightly brighter */
-  border-bottom: 3px solid #555;
+  /* Horizontal brushed lines across face */
   box-shadow:
-    0 6px 24px rgba(0,0,0,0.9),
-    inset 0 -8px 20px rgba(255,255,255,0.04),
-    inset 0 -2px 4px rgba(255,255,255,0.08);
+    inset 0 0 60px rgba(0,0,0,0.6),
+    0 0 40px rgba(0,0,0,0.8);
 }
 
-.metal-bottom {
-  bottom: 0;
-  background:
-    linear-gradient(0deg,
-      #111 0%,
-      #1c1c1c 15%,
-      #2e2e2e 30%,
-      #3a3a3a 45%,
-      #292929 60%,
-      #1e1e1e 80%,
-      #141414 100%
-    );
-  border-top: 3px solid #555;
-  box-shadow:
-    0 -6px 24px rgba(0,0,0,0.9),
-    inset 0 8px 20px rgba(255,255,255,0.04),
-    inset 0 2px 4px rgba(255,255,255,0.08);
-}
-
-/* Brushed steel horizontal striations */
-.metal-texture {
+/* Brushed radial machined striations */
+.disc-face::before {
+  content: '';
   position: absolute;
   inset: 0;
-  /* Fine horizontal machined lines — CSS-only brushed metal */
   background-image:
-    /* Fine bright scratch lines */
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 5px,
+      rgba(255,255,255,0.018) 5px,
+      rgba(255,255,255,0.018) 6px
+    ),
     repeating-linear-gradient(
       90deg,
       transparent 0px,
-      transparent 3px,
-      rgba(255,255,255,0.015) 3px,
-      rgba(255,255,255,0.015) 4px
-    ),
-    /* Medium striations */
-    repeating-linear-gradient(
-      90deg,
-      transparent 0px,
-      transparent 11px,
-      rgba(255,255,255,0.025) 11px,
-      rgba(255,255,255,0.025) 12px
-    ),
-    /* Wide highlight band across mid surface */
-    linear-gradient(180deg,
-      transparent 0%,
-      rgba(255,255,255,0.03) 30%,
-      rgba(255,255,255,0.07) 50%,
-      rgba(255,255,255,0.03) 70%,
-      transparent 100%
+      transparent 14px,
+      rgba(255,255,255,0.01) 14px,
+      rgba(255,255,255,0.01) 15px
     );
-  /* Beveled edge highlight on contact face */
+  border-radius: inherit;
 }
 
-/* Bolt holes on the metal slabs for realism */
-.metal-top::before,
-.metal-bottom::before {
+/* Outer rim highlight — gives disc a raised 3D edge */
+.disc-face::after {
   content: '';
   position: absolute;
-  left: 0;
-  right: 0;
-  height: 100%;
-  background-image:
-    radial-gradient(ellipse 16px 16px at 10% 50%, #0c0c0c 60%, transparent 70%),
-    radial-gradient(ellipse 16px 16px at 90% 50%, #0c0c0c 60%, transparent 70%),
-    radial-gradient(ellipse 12px 12px at 10% 50%, #555 58%, transparent 62%),
-    radial-gradient(ellipse 12px 12px at 90% 50%, #555 58%, transparent 62%);
-  pointer-events: none;
+  inset: 6px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.12);
+  box-shadow:
+    inset 0 0 20px rgba(0,0,0,0.5),
+    0 0 10px rgba(255,255,255,0.05);
 }
 
-/* Raised ridge along contact edge — looks like an engine block mating surface */
-.metal-top::after {
-  content: '';
+/* TOP disc — only bottom half visible (the contact edge faces down) */
+.disc-top {
+  align-self: flex-end;
+  margin-bottom: -2px;
+}
+
+.disc-top .disc-face {
+  top: 0;    /* Shows bottom half of the circle */
+}
+
+/* BOTTOM disc — only top half visible */
+.disc-bottom {
+  align-self: flex-start;
+  margin-top: -2px;
+}
+
+.disc-bottom .disc-face {
+  bottom: 0;  /* Shows top half of the circle */
+}
+
+/* Concentric machined rings on disc face */
+.disc-ring {
   position: absolute;
-  bottom: 0;
-  left: 0;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: transparent;
+}
+.ring-1 { width: 80%;  height: 80%; }
+.ring-2 { width: 55%;  height: 55%;  border-color: rgba(255,255,255,0.1); }
+.ring-3 { width: 30%;  height: 30%;  border-color: rgba(255,255,255,0.12); }
+
+/* Bolt holes on disc — evenly distributed */
+.disc-bolt {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #0a0a0a 40%, #2a2a2a 70%, #1a1a1a 100%);
+  border: 2px solid #444;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+}
+
+/* 6 bolts positioned in a circle at 38% radius */
+.bolt-1 { top: calc(50% - 38% * 0.95 - 9px); left: calc(50% - 9px); }
+.bolt-2 { top: calc(50% - 38% * 0.48 - 9px); left: calc(50% + 38% * 0.83 - 9px); }
+.bolt-3 { top: calc(50% + 38% * 0.48 - 9px); left: calc(50% + 38% * 0.83 - 9px); }
+.bolt-4 { top: calc(50% + 38% * 0.95 - 9px); left: calc(50% - 9px); }
+.bolt-5 { top: calc(50% + 38% * 0.48 - 9px); left: calc(50% - 38% * 0.83 - 9px); }
+.bolt-6 { top: calc(50% - 38% * 0.48 - 9px); left: calc(50% - 38% * 0.83 - 9px); }
+
+/* Center hub */
+.disc-center {
+  position: absolute;
+  width: 48px; height: 48px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, #555 0%, #2a2a2a 60%, #111 100%);
+  border: 3px solid #666;
+  box-shadow:
+    inset 0 2px 6px rgba(0,0,0,0.8),
+    0 0 12px rgba(255,255,255,0.05);
+}
+
+/* ── CONTACT ZONE (gap between discs) ─────────────────────── */
+.contact-zone {
   width: 100%;
-  height: 8px;
-  background: linear-gradient(180deg, #3e3e3e, #5a5a5a 40%, #3a3a3a);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  height: 80px;
+  position: relative;
+  overflow: hidden;
+  z-index: 5;
+  background: #000;
+  /* Edge shadows from disc faces pressing down */
+  box-shadow:
+    inset 0 8px 20px rgba(0,0,0,0.9),
+    inset 0 -8px 20px rgba(0,0,0,0.9);
 }
 
-.metal-bottom::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 8px;
-  background: linear-gradient(0deg, #3e3e3e, #5a5a5a 40%, #3a3a3a);
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.8);
-}
-
-/* Violent shake animation for high friction state */
-@keyframes frictionShudder {
-  0%   { transform: translate(0, 0) }
-  20%  { transform: translate(-4px, 2px) }
-  40%  { transform: translate(4px, -2px) }
-  60%  { transform: translate(-6px, 1px) }
-  80%  { transform: translate(5px, -1px) }
-  100% { transform: translate(0, 0) }
-}
-
-.is-shuddering {
-  animation: frictionShudder 0.1s infinite linear;
-}
-
-/* ── HEAT GLOW ────────────────────────────────────────────── */
-/* The gap between the slabs glows red from friction heat */
+/* ── HEAT GLOW — red friction contact before oil ──────────── */
 .heat-glow {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 120%;
-  height: 60px;
-  background: radial-gradient(ellipse 70% 100% at center,
-    rgba(255, 60, 0, 0.9) 0%,
-    rgba(196, 18, 48, 0.7) 40%,
-    rgba(150, 10, 30, 0.3) 70%,
+  inset: 0;
+  background: radial-gradient(ellipse 80% 100% at 50% 50%,
+    rgba(255, 60, 0, 0.8) 0%,
+    rgba(196, 18, 48, 0.5) 50%,
     transparent 100%
   );
-  filter: blur(12px);
-  opacity: 1; /* GSAP controls this */
-  z-index: 5;
+  opacity: 1;
+  z-index: 2;
   mix-blend-mode: screen;
 }
 
-/* ── OIL LAYER — Realistic liquid oil between plates ─────── */
+/* ── OIL LAYER — fluid with animated waves ─────────────────── */
 .oil-layer {
   position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 0px; /* GSAP expands this */
-  transform: translateY(-50%);
-  z-index: 6;
-  opacity: 0; /* GSAP controls this */
-  will-change: height, opacity;
+  inset: 0;
+  opacity: 0;   /* GSAP controls */
+  z-index: 3;
   overflow: hidden;
+  background: #6b4800;   /* deep oil colour base */
 }
 
-/* The actual oil fluid appearance */
-.oil-layer::before {
-  content: '';
+.oil-wave-svg {
   position: absolute;
-  inset: 0;
-  background:
-    /* Top surface sheen — oil catches light */
-    linear-gradient(180deg,
-      rgba(255, 220, 120, 0.9) 0%,
-      rgba(200, 160, 50, 0.95) 8%,
-      rgba(160, 120, 20, 0.98) 25%,
-      rgba(120, 85, 10, 1) 50%,
-      rgba(160, 120, 20, 0.98) 75%,
-      rgba(200, 160, 50, 0.95) 92%,
-      rgba(255, 220, 120, 0.9) 100%
-    );
-  /* Iridescent shimmer waves */
-  box-shadow:
-    inset 0 3px 12px rgba(255, 240, 180, 0.6),
-    inset 0 -3px 12px rgba(255, 240, 180, 0.6),
-    0 0 40px rgba(200, 140, 0, 0.5),
-    0 0 80px rgba(200, 140, 0, 0.2);
-}
-
-/* Oil ripple/wave effect */
-.oil-layer::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    90deg,
-    transparent 0px,
-    rgba(255, 255, 200, 0.08) 40px,
-    transparent 80px,
-    rgba(255, 255, 200, 0.05) 120px,
-    transparent 160px
-  );
-  animation: oilRipple 3s linear infinite;
-}
-
-@keyframes oilRipple {
-  from { transform: translateX(0); }
-  to   { transform: translateX(160px); }
-}
-
-/* ── OIL SPLASH DROPLETS ─────────────────────────────────── */
-.oil-splash-container {
-  position: absolute;
-  top: 50%;
+  bottom: 0;
   left: 0;
-  width: 100%;
-  height: 80px;
-  transform: translateY(-50%);
-  z-index: 7;
-  pointer-events: none;
-  opacity: 0; /* GSAP controls */
+  width: 200%;   /* oversized so animation can translate */
+  height: 100%;
 }
 
-.oil-drop {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%,
-    rgba(255, 230, 130, 0.95),
-    rgba(180, 130, 20, 0.9) 50%,
-    rgba(100, 70, 5, 0.85) 100%
-  );
-  box-shadow:
-    0 0 8px rgba(220, 160, 0, 0.6),
-    inset 0 -2px 4px rgba(0,0,0,0.4);
-  will-change: transform, opacity;
+/* Wave paths — different colours, speeds, opacities */
+.wave.w1 {
+  fill: rgba(180, 120, 10, 0.85);
+  animation: waveFlow 2.2s linear infinite;
+}
+.wave.w2 {
+  fill: rgba(220, 160, 30, 0.75);
+  animation: waveFlow 3.1s linear infinite reverse;
+}
+.wave.w3 {
+  fill: rgba(255, 200, 60, 0.55);
+  animation: waveFlow 1.8s linear infinite;
+}
+
+/* Animating the SVG itself across to create flowing motion */
+@keyframes waveFlow {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 /* ── UI OVERLAYS ──────────────────────────────────────────── */
@@ -286,7 +246,6 @@
   padding: var(--sp-12) var(--section-px);
 }
 
-/* Meters */
 .friction-meters {
   display: flex;
   flex-direction: column;
@@ -354,7 +313,23 @@
   color: var(--brand-red);
 }
 
+/* Shudder animation for metal-on-metal state */
+@keyframes frictionShudder {
+  0%   { transform: translate(0, 0) }
+  20%  { transform: translate(-3px, 1px) }
+  40%  { transform: translate(3px, -1px) }
+  60%  { transform: translate(-5px, 1px) }
+  80%  { transform: translate(4px, -1px) }
+  100% { transform: translate(0, 0) }
+}
+
+.is-shuddering {
+  animation: frictionShudder 0.08s infinite linear;
+}
+
 @media (max-width: 768px) {
+  .engine-disc { height: 160px; }
+  .contact-zone { height: 60px; }
   .friction-ui {
     flex-direction: column;
     justify-content: flex-end;
@@ -365,10 +340,6 @@
     justify-content: center;
     margin-bottom: var(--sp-8);
   }
-  .meter-track {
-    height: 80px;
-  }
-  .friction-text {
-    text-align: center;
-  }
+  .meter-track { height: 80px; }
+  .friction-text { text-align: center; }
 }

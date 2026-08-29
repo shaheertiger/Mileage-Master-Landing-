@@ -9,16 +9,15 @@ export const initFrictionScene = async () => {
   if (!gsap || !ScrollTrigger) return;
 
   const section = document.getElementById('friction');
-  const sticky = section?.querySelector('.friction-sticky');
+  const sticky  = section?.querySelector('.friction-sticky');
   if (!section || !sticky) return;
 
   // DOM Elements
-  const topSlab      = section.querySelector('.metal-top');
-  const bottomSlab   = section.querySelector('.metal-bottom');
+  const discTop      = section.querySelector('.disc-top');
+  const discBottom   = section.querySelector('.disc-bottom');
+  const contactZone  = section.querySelector('.contact-zone');
   const heatGlow     = section.querySelector('.heat-glow');
   const oilLayer     = section.querySelector('.oil-layer');
-  const splashEl     = section.querySelector('.oil-splash-container');
-  const oilDrops     = section.querySelectorAll('.oil-drop');
   const textGroup    = section.querySelector('.friction-text');
 
   // Meters
@@ -26,13 +25,13 @@ export const initFrictionScene = async () => {
   const meterHeat       = section.querySelector('.meter-heat');
   const meterProtection = section.querySelector('.meter-protection');
 
-  // ── Initial State: slabs pressed together, shuddering ─────
-  topSlab.classList.add('is-shuddering');
-  bottomSlab.classList.add('is-shuddering');
-  
-  // Continuous opposing slide to show metal-on-metal motion
-  gsap.to(topSlab,    { x: '-20vw', duration: 10, repeat: -1, yoyo: true, ease: 'none' });
-  gsap.to(bottomSlab, { x: '20vw',  duration: 10, repeat: -1, yoyo: true, ease: 'none' });
+  // ── Initial State: discs pressed together, shuddering ─────
+  discTop.classList.add('is-shuddering');
+  discBottom.classList.add('is-shuddering');
+
+  // Opposing slide — metal grinding against metal
+  gsap.to(discTop,    { x: '-6vw', duration: 8, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  gsap.to(discBottom, { x: '6vw',  duration: 8, repeat: -1, yoyo: true, ease: 'sine.inOut' });
 
   // ── Master Scroll Timeline ───────────────────────────────
   const masterTl = gsap.timeline({
@@ -45,91 +44,55 @@ export const initFrictionScene = async () => {
       onUpdate(self) {
         const p = self.progress;
         updateMeters(p, meterFriction, meterHeat, meterProtection);
-        
-        // Remove shudder when oil starts building up
-        if (p > 0.45 && topSlab.classList.contains('is-shuddering')) {
-          topSlab.classList.remove('is-shuddering');
-          bottomSlab.classList.remove('is-shuddering');
-        } else if (p <= 0.45 && !topSlab.classList.contains('is-shuddering')) {
-          topSlab.classList.add('is-shuddering');
-          bottomSlab.classList.add('is-shuddering');
+
+        // Stop shudder once oil builds up
+        if (p > 0.45 && discTop.classList.contains('is-shuddering')) {
+          discTop.classList.remove('is-shuddering');
+          discBottom.classList.remove('is-shuddering');
+        } else if (p <= 0.45 && !discTop.classList.contains('is-shuddering')) {
+          discTop.classList.add('is-shuddering');
+          discBottom.classList.add('is-shuddering');
         }
       }
     }
   });
 
-  // ── Phase 1 (0–20%): Text fades in — friction hell ────────
+  // ── Phase 1 (0–20%): Text in, high friction ───────────────
   masterTl.fromTo(textGroup,
     { opacity: 0, scale: 0.95 },
     { opacity: 1, scale: 1, duration: 0.2 },
     0
   );
 
-  // ── Phase 2 (20–60%): Oil injects — slabs separate clearly ─
-  // Slabs pull apart to reveal the gap where oil floods in
-  masterTl.to(topSlab,    { y: '-38px', duration: 0.4, ease: 'power2.inOut' }, 0.2);
-  masterTl.to(bottomSlab, { y: '38px',  duration: 0.4, ease: 'power2.inOut' }, 0.2);
+  // ── Phase 2 (20–60%): Oil injects — discs separate ────────
+  // Discs pull apart revealing the contact zone
+  masterTl.to(discTop,    { y: '-50px', duration: 0.4, ease: 'power2.inOut' }, 0.2);
+  masterTl.to(discBottom, { y: '50px',  duration: 0.4, ease: 'power2.inOut' }, 0.2);
 
-  // Oil layer floods in — amber/golden liquid
+  // Contact zone expands as discs separate
+  masterTl.to(contactZone, { height: '120px', duration: 0.4, ease: 'power2.inOut' }, 0.2);
+
+  // Oil floods in with animated waves — already animating via CSS
   masterTl.fromTo(oilLayer,
-    { opacity: 0, height: '0px' },
-    { opacity: 1, height: '76px', duration: 0.4, ease: 'power2.inOut' },
-    0.2
+    { opacity: 0 },
+    { opacity: 1, duration: 0.35, ease: 'power2.inOut' },
+    0.22
   );
 
-  // Oil SPLASH droplets burst out as oil hits the metal
-  if (splashEl) {
-    masterTl.fromTo(splashEl,
-      { opacity: 0 },
-      { opacity: 1, duration: 0.1 },
-      0.28  // Slightly after oil starts — the splash moment
-    );
+  // Heat glow fades out as oil takes over
+  masterTl.to(heatGlow, { opacity: 0, duration: 0.35, ease: 'power2.out' }, 0.28);
 
-    // Each drop splashes outward from center
-    oilDrops.forEach((drop, i) => {
-      const dir = i % 2 === 0 ? -1 : 1;
-      const angle = (i / oilDrops.length) * 360;
-      const dist = 30 + (i * 8);
-      masterTl.fromTo(drop,
-        { 
-          opacity: 0, 
-          scale: 0, 
-          x: 0, 
-          y: 0 
-        },
-        { 
-          opacity: 1, 
-          scale: 1, 
-          x: Math.cos(angle) * dist * dir,
-          y: Math.sin(angle) * 20,
-          duration: 0.12, 
-          ease: 'back.out(2)',
-          stagger: 0.01
-        },
-        0.3 + (i * 0.01)
-      );
-    });
-
-    // Drops settle and absorb into oil film
-    masterTl.to(oilDrops, { opacity: 0, y: '+=15', duration: 0.1, stagger: 0.01 }, 0.55);
-    masterTl.to(splashEl, { opacity: 0, duration: 0.05 }, 0.65);
-  }
-
-  // ── Phase 3 (30–70%): Heat dissipates as oil protects ─────
-  masterTl.to(heatGlow, { opacity: 0, duration: 0.4, ease: 'power2.out' }, 0.3);
-
-  // ── Phase 4 (80–100%): Oil expands, transition out ────────
+  // ── Phase 3 (80–100%): Transition out ─────────────────────
   masterTl.to(textGroup, { opacity: 0, duration: 0.1 }, 0.8);
-  masterTl.to(oilLayer,  { height: '110vh', duration: 0.2, ease: 'power2.in' }, 0.8);
+  // Oil floods full screen
+  masterTl.to(contactZone, { height: '110vh', duration: 0.2, ease: 'power2.in' }, 0.8);
 };
 
 /* ── Dynamic Meter Updates ────────────────────────────────── */
 const updateMeters = (p, frictionEl, heatEl, protEl) => {
   if (!frictionEl || !heatEl || !protEl) return;
 
-  let frictionVal = 1.0;
-  let heatVal     = 1.0;
-  let protVal     = 0.0;
+  let frictionVal = 1.0, heatVal = 1.0, protVal = 0.0;
 
   if (p > 0.2 && p < 0.7) {
     const subP = (p - 0.2) / 0.5;
@@ -137,9 +100,7 @@ const updateMeters = (p, frictionEl, heatEl, protEl) => {
     heatVal     = 1.0 - Math.pow(subP, 2);
     protVal     = subP;
   } else if (p >= 0.7) {
-    frictionVal = 0.0;
-    heatVal     = 0.0;
-    protVal     = 1.0;
+    frictionVal = 0.0; heatVal = 0.0; protVal = 1.0;
   }
 
   frictionEl.querySelector('.meter-fill').style.transform = `scaleY(${frictionVal})`;
