@@ -39,16 +39,8 @@ export const initNav = () => {
    ════════════════════════════════════════════════════════════ */
 
 const onScroll = () => {
-  const y = window.scrollY;
-
-  // Subtle state: 80–240px of scroll
-  const isSubtle = y > 80  && y < 240;
-  // Solid state:  240px+
-  const isSolid  = y >= 240;
-
-  nav.classList.toggle('nav--subtle', isSubtle);
-  nav.classList.toggle('nav--solid',  isSolid);
-
+  // Nav is absolutely positioned and scrolls out of view naturally.
+  // No background changes needed.
   scrollRAF = null;
 };
 

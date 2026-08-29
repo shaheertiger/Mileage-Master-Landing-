@@ -99,7 +99,7 @@
   justify-content: center;
   gap: var(--sp-10);
   list-style: none;
-  opacity: 0; /* JS reveal */
+  opacity: 1; /* always visible on hero */
 }
 
 .nav__link {
