@@ -9,11 +9,8 @@ import { emit, EVENTS }                   from './utils/events.js';
 import { initHero }                       from './hero.js';
 import { initFrictionScene }              from './friction.js';
 import { initComparisonScene }            from './comparison.js';
-import { initTechnologyScene }            from './technology.js';
 import { initFinderScene }                from './finder.js';
 import { initLaboratoryScene }            from './products.js';
-import { initStoryScene }                 from './story.js';
-import { initFinaleScene }                from './finale.js';
 import { initTweakner }                   from './tweakner.js';
 
 /*
@@ -62,17 +59,8 @@ const init = async () => {
   // ── 7. Comparison sequence setup ──────────────────────────
   initComparisonScene();
 
-  // ── 8. Technology sequence setup ──────────────────────────
-  await initTechnologyScene();
-
   // ── 8. Finder sequence setup ──────────────────────────────
   initFinderScene();
-
-  // ── 10. Brand Story sequence setup ────────────────────────
-  await initStoryScene();
-
-  // ── 11. Finale sequence setup ─────────────────────────────
-  await initFinaleScene();
 
   // ── 11.5 Live Design Tweakner (hidden — re-enable when needed) ──
   // initTweakner();
