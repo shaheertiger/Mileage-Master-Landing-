@@ -138,6 +138,72 @@
       </div><!-- /.hero__sticky -->
     </section><!-- /#hero -->
 
+    <!-- ─────────────────────────────────────────────────────────
+       PRODUCT LABORATORY SEQUENCE
+       ───────────────────────────────────────────────────────── -->
+    <section id="laboratory" aria-label="Product Laboratory">
+      <div class="lab-container">
+
+        <!-- Left Panel: Controls -->
+        <div class="lab-panel lab-controls">
+          <h3 class="lab-title">SELECT PRODUCT</h3>
+          <div class="product-selector">
+            <button class="automotive-btn is-active" data-product="0">
+              <span class="btn-indicator"></span>
+              <span class="btn-text">PRODUCT 01</span>
+            </button>
+            <button class="automotive-btn" data-product="1">
+              <span class="btn-indicator"></span>
+              <span class="btn-text">PRODUCT 02</span>
+            </button>
+            <button class="automotive-btn" data-product="2">
+              <span class="btn-indicator"></span>
+              <span class="btn-text">PRODUCT 03</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Center: Massive Bottle Render -->
+        <div class="lab-center">
+          <div class="lab-bottle-wrapper">
+            <!-- Placeholder using the single bottle.png. GSAP will manipulate this -->
+            <img src="assets/images/bottle.png" alt="Mileage Master Product" id="lab-bottle-render" />
+          </div>
+          <div class="lab-product-name">
+            <h2 id="lab-name-text">PRODUCT 01</h2>
+          </div>
+        </div>
+
+        <!-- Right Panel: Telemetry -->
+        <div class="lab-panel lab-telemetry">
+          <div class="telemetry-grid">
+
+            <div class="telemetry-item">
+              <span class="t-label">VISCOSITY</span>
+              <span class="t-value" id="lab-val-viscosity">SPECIFICATION TO BE PROVIDED</span>
+            </div>
+
+            <div class="telemetry-item">
+              <span class="t-label">APPLICATION</span>
+              <span class="t-value" id="lab-val-application">SPECIFICATION TO BE PROVIDED</span>
+            </div>
+
+            <div class="telemetry-item">
+              <span class="t-label">SPECIFICATION</span>
+              <span class="t-value" id="lab-val-spec">SPECIFICATION TO BE PROVIDED</span>
+            </div>
+
+            <div class="telemetry-item">
+              <span class="t-label">ENGINE TYPE</span>
+              <span class="t-value" id="lab-val-engine">SPECIFICATION TO BE PROVIDED</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
 
     <!-- ─────────────────────────────────────────────────────────
        SUBSEQUENT SECTIONS — Awaiting build commands
@@ -201,96 +267,7 @@
       </div>
     </section>
 
-    <!-- ─────────────────────────────────────────────────────────
-       INSIDE THE ENGINE — VIDEO SCROLL SEQUENCE
-       ───────────────────────────────────────────────────────── -->
-    <section id="inside-engine" aria-label="Inside the Engine">
-      <div class="engine-sticky">
-        <!-- Video Element (User will add src later) -->
-        <video class="engine-video" id="engine-video" playsinline muted preload="auto"
-          poster="assets/images/engine-bg.jpg">
-          <!-- <source src="assets/video/engine-sequence.mp4" type="video/mp4" /> -->
-        </video>
-        <div class="engine-vignette" aria-hidden="true"></div>
 
-        <!-- UI Overlays -->
-        <div class="engine-ui">
-
-          <!-- Technical Labels -->
-          <div class="engine-label label-block" aria-hidden="true">
-            <div class="label-line"></div>
-            <span class="label-text">ENGINE BLOCK</span>
-          </div>
-          <div class="engine-label label-piston" aria-hidden="true">
-            <div class="label-line"></div>
-            <span class="label-text">PISTON</span>
-          </div>
-          <div class="engine-label label-cylinder" aria-hidden="true">
-            <div class="label-line"></div>
-            <span class="label-text">CYLINDER WALL</span>
-          </div>
-          <div class="engine-label label-crankshaft" aria-hidden="true">
-            <div class="label-line"></div>
-            <span class="label-text">CRANKSHAFT</span>
-          </div>
-          <div class="engine-label label-channel" aria-hidden="true">
-            <div class="label-line"></div>
-            <span class="label-text">OIL CHANNEL</span>
-          </div>
-          <div class="engine-label label-lube" aria-hidden="true">
-            <div class="label-line"></div>
-            <span class="label-text">LUBRICATION POINTS</span>
-          </div>
-
-          <!-- Cinematic Text Overlays -->
-          <div class="engine-text text-friction">
-            <h2>EVERY REVOLUTION<br>CREATES FRICTION.</h2>
-          </div>
-          <div class="engine-text text-solution">
-            <h2>THE RIGHT LUBRICATION<br><span class="red">CHANGES THE STORY.</span></h2>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ─────────────────────────────────────────────────────────
-       ENGINE PERFORMANCE SEQUENCE
-       ───────────────────────────────────────────────────────── -->
-    <section id="performance" aria-label="Engine Performance">
-      <div class="perf-sticky">
-
-        <!-- Video Container with dynamic shake/blur applied here -->
-        <div class="perf-video-wrapper" aria-hidden="true">
-          <video class="perf-video" id="perf-video" playsinline muted preload="auto"
-            poster="assets/images/engine-bg.jpg">
-            <!-- <source src="assets/video/engine-performance.mp4" type="video/mp4" /> -->
-          </video>
-          <div class="perf-vignette"></div>
-        </div>
-
-        <!-- UI Overlays -->
-        <div class="perf-ui">
-
-          <!-- RPM Counter -->
-          <div class="perf-rpm" aria-hidden="true">
-            <span class="rpm-label">RPM</span>
-            <span class="rpm-value">0000</span>
-          </div>
-
-          <!-- Climax Copy -->
-          <div class="perf-climax">
-            <img src="assets/images/logo.jpg" alt="Mileage Master" class="perf-logo" />
-            <h2 class="t-display">
-              BUILT FOR THE<br>
-              <span class="red">MILES AHEAD.</span>
-            </h2>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
 
     <!-- ─────────────────────────────────────────────────────────
        COMPARISON SEQUENCE
@@ -515,71 +492,6 @@
       </div>
     </section>
 
-    <!-- ─────────────────────────────────────────────────────────
-       PRODUCT LABORATORY SEQUENCE
-       ───────────────────────────────────────────────────────── -->
-    <section id="laboratory" aria-label="Product Laboratory">
-      <div class="lab-container">
-
-        <!-- Left Panel: Controls -->
-        <div class="lab-panel lab-controls">
-          <h3 class="lab-title">SELECT PRODUCT</h3>
-          <div class="product-selector">
-            <button class="automotive-btn is-active" data-product="0">
-              <span class="btn-indicator"></span>
-              <span class="btn-text">PRODUCT 01</span>
-            </button>
-            <button class="automotive-btn" data-product="1">
-              <span class="btn-indicator"></span>
-              <span class="btn-text">PRODUCT 02</span>
-            </button>
-            <button class="automotive-btn" data-product="2">
-              <span class="btn-indicator"></span>
-              <span class="btn-text">PRODUCT 03</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Center: Massive Bottle Render -->
-        <div class="lab-center">
-          <div class="lab-bottle-wrapper">
-            <!-- Placeholder using the single bottle.png. GSAP will manipulate this -->
-            <img src="assets/images/bottle.png" alt="Mileage Master Product" id="lab-bottle-render" />
-          </div>
-          <div class="lab-product-name">
-            <h2 id="lab-name-text">PRODUCT 01</h2>
-          </div>
-        </div>
-
-        <!-- Right Panel: Telemetry -->
-        <div class="lab-panel lab-telemetry">
-          <div class="telemetry-grid">
-
-            <div class="telemetry-item">
-              <span class="t-label">VISCOSITY</span>
-              <span class="t-value" id="lab-val-viscosity">SPECIFICATION TO BE PROVIDED</span>
-            </div>
-
-            <div class="telemetry-item">
-              <span class="t-label">APPLICATION</span>
-              <span class="t-value" id="lab-val-application">SPECIFICATION TO BE PROVIDED</span>
-            </div>
-
-            <div class="telemetry-item">
-              <span class="t-label">SPECIFICATION</span>
-              <span class="t-value" id="lab-val-spec">SPECIFICATION TO BE PROVIDED</span>
-            </div>
-
-            <div class="telemetry-item">
-              <span class="t-label">ENGINE TYPE</span>
-              <span class="t-value" id="lab-val-engine">SPECIFICATION TO BE PROVIDED</span>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-    </section>
 
     <!-- ─────────────────────────────────────────────────────────
        BRAND STORY SEQUENCE

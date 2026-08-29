@@ -66,13 +66,16 @@ export const initFrictionScene = async () => {
     if (!images[0]) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    
     // Physical pixels
-    canvas.width = sticky.offsetWidth * dpr;
-    canvas.height = sticky.offsetHeight * dpr;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
     
     // CSS pixels
-    canvas.style.width = `${sticky.offsetWidth}px`;
-    canvas.style.height = `${sticky.offsetHeight}px`;
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
     
     ctx.scale(dpr, dpr);
     renderFrame();
@@ -89,13 +92,16 @@ export const initFrictionScene = async () => {
     if (!img) return;
 
     // Clear
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
     // Calculate 'cover' object-fit equivalent for canvas
-    const cW = sticky.offsetWidth;
-    const cH = sticky.offsetHeight;
+    const cW = window.innerWidth;
+    const cH = window.innerHeight;
     const iW = img.width;
     const iH = img.height;
+    
+    // Fallback if image hasn't fully decoded its dimensions
+    if (iW === 0 || iH === 0) return;
     
     const scale = Math.max(cW / iW, cH / iH);
     const x = (cW / 2) - (iW / 2) * scale;

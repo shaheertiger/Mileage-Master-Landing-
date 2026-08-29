@@ -175,8 +175,12 @@
   line-height: 1.4;
 }
 
-/* Mobile */
+/* Mobile & Tablet */
 @media (max-width: 1024px) {
+  #laboratory {
+    padding-top: var(--sp-24);
+    padding-bottom: var(--sp-24);
+  }
   .lab-container {
     flex-direction: column;
     height: auto;
@@ -184,17 +188,41 @@
   }
   .lab-panel {
     flex: auto;
+    align-items: center;
+  }
+  .product-selector {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--sp-4);
+  }
+  .automotive-btn {
+    padding: var(--sp-3) var(--sp-4);
   }
   .telemetry-grid {
     border-left: none;
     border-top: 1px solid rgba(255,255,255,0.1);
     padding-left: 0;
     padding-top: var(--sp-8);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-6);
+    width: 100%;
+  }
+  .lab-bottle-wrapper {
+    height: 50vh;
+  }
+  .lab-product-name {
+    bottom: -30px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 600px) {
+  .telemetry-grid {
+    grid-template-columns: 1fr;
   }
   .lab-bottle-wrapper {
     height: 40vh;
-  }
-  .lab-product-name {
-    bottom: -20px;
   }
 }

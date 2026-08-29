@@ -7,9 +7,7 @@ import { initGSAP }                       from './utils/gsap-init.js';
 import { TIER }                           from './utils/device.js';
 import { emit, EVENTS }                   from './utils/events.js';
 import { initHero }                       from './hero.js';
-import { initEngineScene }                from './engine.js';
 import { initFrictionScene }              from './friction.js';
-import { initPerformanceScene }           from './performance.js';
 import { initComparisonScene }            from './comparison.js';
 import { initTechnologyScene }            from './technology.js';
 import { initFinderScene }                from './finder.js';
@@ -55,14 +53,11 @@ const init = async () => {
   // Runs setup, waits for LOADER_COMPLETE to animate entrance
   await initHero();
 
-  // ── 4. Inside the Engine setup ────────────────────────────
-  await initEngineScene();
+  // ── 4. Laboratory sequence setup ──────────────────────────
+  initLaboratoryScene();
 
   // ── 5. Friction sequence setup ────────────────────────────
   await initFrictionScene();
-
-  // ── 6. Performance sequence setup ─────────────────────────
-  await initPerformanceScene();
 
   // ── 7. Comparison sequence setup ──────────────────────────
   initComparisonScene();
@@ -72,9 +67,6 @@ const init = async () => {
 
   // ── 8. Finder sequence setup ──────────────────────────────
   initFinderScene();
-
-  // ── 9. Laboratory sequence setup ──────────────────────────
-  initLaboratoryScene();
 
   // ── 10. Brand Story sequence setup ────────────────────────
   await initStoryScene();
