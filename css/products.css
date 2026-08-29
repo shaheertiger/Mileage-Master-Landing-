@@ -112,8 +112,8 @@
 
 .lab-bottle-wrapper {
   position: relative;
-  height: 65vh;
-  max-height: 800px;
+  height: 55vh;
+  max-height: 550px;
   display: flex;
   align-items: center;
   justify-content: center;
