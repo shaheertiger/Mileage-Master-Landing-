@@ -146,19 +146,19 @@
 
         <!-- Left Panel: Controls -->
         <div class="lab-panel lab-controls">
-          <h3 class="lab-title">SELECT PRODUCT</h3>
+          <h3 class="lab-title">EXPLORE THE PRODUCT</h3>
           <div class="product-selector">
-            <button class="automotive-btn is-active" data-product="0">
+            <button class="automotive-btn is-active" data-view="0">
               <span class="btn-indicator"></span>
-              <span class="btn-text">PRODUCT 01</span>
+              <span class="btn-text">FRONT VIEW</span>
             </button>
-            <button class="automotive-btn" data-product="1">
+            <button class="automotive-btn" data-view="1">
               <span class="btn-indicator"></span>
-              <span class="btn-text">PRODUCT 02</span>
+              <span class="btn-text">ANGLED VIEW</span>
             </button>
-            <button class="automotive-btn" data-product="2">
+            <button class="automotive-btn" data-view="2">
               <span class="btn-indicator"></span>
-              <span class="btn-text">PRODUCT 03</span>
+              <span class="btn-text">BACK VIEW</span>
             </button>
           </div>
         </div>
@@ -166,11 +166,11 @@
         <!-- Center: Massive Bottle Render -->
         <div class="lab-center">
           <div class="lab-bottle-wrapper">
-            <!-- Placeholder using the single bottle.png. GSAP will manipulate this -->
-            <img src="assets/images/bottle.png" alt="Mileage Master Product" id="lab-bottle-render" />
+            <!-- GSAP will manipulate this source based on view selection -->
+            <img src="assets/images/product-1.jpg" alt="Mileage Master Product" id="lab-bottle-render" />
           </div>
           <div class="lab-product-name">
-            <h2 id="lab-name-text">PRODUCT 01</h2>
+            <h2 id="lab-name-text">MILEAGE MASTER</h2>
           </div>
         </div>
 
